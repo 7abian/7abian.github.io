@@ -9,7 +9,9 @@
       "Bash(git init:*)",
       "Bash(git add:*)",
       "Bash(git commit:*)",
-      "Bash(node -c:*)"
+      "Bash(node -c:*)",
+      "Skill(update-config)",
+      "Skill(update-config:*)"
     ]
   }
 }
