@@ -742,4 +742,22 @@ aside { display: flex; flex-direction: column; gap: 1.5rem; }
   .post-content { padding: 1.5rem; }
   .post-wrap { padding: 2rem 1.2rem; }
   .post-nav { grid-template-columns: 1fr; }
+  header { padding: 0.75rem 1rem; }
+  .nav-container { flex-wrap: wrap; gap: 0.5rem; }
+  .avatar { width: 42px; height: 42px; }
+  .logo { font-size: 1.15rem; gap: 0.5rem; }
+  nav ul { gap: 0.75rem; }
+  nav a { font-size: 0.85rem; }
+  .back-btn { font-size: 0.8rem; }
+}
+
+@media (max-width: 480px) {
+  header { padding: 0.6rem 0.8rem; }
+  .avatar { width: 36px; height: 36px; }
+  .logo { font-size: 1rem; gap: 0.4rem; }
+  nav ul { gap: 0.5rem; flex-wrap: wrap; }
+  nav a { font-size: 0.78rem; }
+  .back-btn { font-size: 0.75rem; gap: 0.25rem; }
+  .hero { padding: 2.5rem 1rem 1.5rem; }
+  .hero h1 { font-size: 1.6rem; }
 }
