@@ -50,7 +50,7 @@ h1{font-size:2rem;margin-bottom:2rem;text-align:center}
 <div class="editor-section" id="editorSection">
 <div style="background:var(--glass-bg);border:1px solid var(--glass-border);border-radius:12px;padding:1.5rem;margin-bottom:2rem">
 <h3 style="margin-bottom:1rem">编辑已有文章</h3>
-<div style="display:flex;gap:1rem">
+<div class="header-left">
 <input type="text" id="editFileName" placeholder="输入文章文件名，如: post-1778289950516.html" style="flex:1;padding:0.75rem;background:rgba(255,255,255,0.1);border:1px solid var(--glass-border);border-radius:8px;color:var(--text)">
 <button class="btn" onclick="loadArticle()">加载文章</button>
 </div>
@@ -257,7 +257,7 @@ footer{text-align:center;padding:2rem;color:var(--muted);font-size:0.88rem;borde
 </div>
 <header>
 <div class="nav-container">
-<div style="display:flex;gap:1rem">
+<div class="header-left">
 <a href="index.html" class="back-btn">← 返回首页</a>
 <div class="admin-only" style="display:none;gap:1rem">
 <a href="admin.html?edit=${fileName}" class="back-btn">✏️ 编辑</a>
