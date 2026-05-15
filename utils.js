@@ -27,7 +27,7 @@ document.querySelectorAll('pre').forEach(pre => {
 
 // 管理员身份验证
 (async () => {
-  const token = localStorage.getItem('github_token');
+  const token = sessionStorage.getItem('github_token');
   if (!token) return;
   try {
     const resp = await fetch('https://api.github.com/user', {
@@ -45,7 +45,7 @@ document.querySelectorAll('pre').forEach(pre => {
 async function deletePost(fileName) {
   if (!confirm('确定要删除这篇文章吗？此操作不可恢复！')) return;
   try {
-    const token = localStorage.getItem('github_token');
+    const token = sessionStorage.getItem('github_token');
     const fileUrl = 'https://api.github.com/repos/7abian/7abian.github.io/contents/' + fileName;
     const resp = await fetch(fileUrl, { headers: { 'Authorization': 'token ' + token } });
     if (!resp.ok) throw new Error('获取文件信息失败');

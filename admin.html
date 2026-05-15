@@ -96,17 +96,24 @@ const GITHUB_REPO='7abian.github.io';
 const GITHUB_BRANCH='main';
 
 window.onload=function(){
-const token=localStorage.getItem('github_token');
+const token=sessionStorage.getItem('github_token');
 if(token){
+document.getElementById('githubToken').value=token;
+}
+const params=new URLSearchParams(window.location.search);
+const editFile=params.get('edit');
+if(editFile && token){
+document.getElementById('editFileName').value=editFile;
 document.getElementById('authSection').classList.add('hidden');
 document.getElementById('editorSection').classList.add('active');
+loadArticle();
 }
 };
 
 function saveToken(){
 const token=document.getElementById('githubToken').value.trim();
 if(!token){showStatus('请输入 GitHub Token','error');return}
-localStorage.setItem('github_token',token);
+sessionStorage.setItem('github_token',token);
 document.getElementById('authSection').classList.add('hidden');
 document.getElementById('editorSection').classList.add('active');
 showStatus('Token 已保存','success');
@@ -122,7 +129,7 @@ async function loadArticle(){
 const fileName=document.getElementById('editFileName').value.trim();
 if(!fileName){showStatus('请输入文章文件名','error');return}
 try{
-const token=localStorage.getItem('github_token');
+const token=sessionStorage.getItem('github_token');
 const url=`https://api.github.com/repos/${GITHUB_OWNER}/${GITHUB_REPO}/contents/${fileName}`;
 const resp=await fetch(url,{headers:{'Authorization':`token ${token}`}});
 if(!resp.ok)throw new Error('文章不存在');
@@ -172,7 +179,7 @@ const fileName=isEdit?editFileName:`post-${Date.now()}.html`;
 const html=generatePostHTML(title,tag,content,fileName);
 let sha=null;
 if(isEdit){
-const token=localStorage.getItem('github_token');
+const token=sessionStorage.getItem('github_token');
 const url=`https://api.github.com/repos/${GITHUB_OWNER}/${GITHUB_REPO}/contents/${fileName}`;
 const resp=await fetch(url,{headers:{'Authorization':`token ${token}`}});
 if(resp.ok){const data=await resp.json();sha=data.sha;}
@@ -299,7 +306,7 @@ async>
 ${'<'}script>
 (async()=>{
 try{
-const resp=await fetch('https://api.github.com/user',{headers:{'Authorization':'token '+localStorage.getItem('github_token')}});
+const resp=await fetch('https://api.github.com/user',{headers:{'Authorization':'token '+sessionStorage.getItem('github_token')}});
 if(resp.ok){
 const user=await resp.json();
 if(user.login==='7abian'){
@@ -311,7 +318,7 @@ document.querySelectorAll('.admin-only').forEach(el=>el.style.display='flex');
 async function deletePost(fileName){
 if(!confirm('确定要删除这篇文章吗？此操作不可恢复！'))return;
 try{
-const token=localStorage.getItem('github_token');
+const token=sessionStorage.getItem('github_token');
 const fileUrl='https://api.github.com/repos/7abian/7abian.github.io/contents/'+fileName;
 const resp=await fetch(fileUrl,{headers:{'Authorization':'token '+token}});
 if(!resp.ok)throw new Error('获取文件信息失败');
@@ -336,7 +343,7 @@ window.location.href='index.html';
 }
 
 async function commitFile(path,content,message,sha){
-const token=localStorage.getItem('github_token');
+const token=sessionStorage.getItem('github_token');
 const url=`https://api.github.com/repos/${GITHUB_OWNER}/${GITHUB_REPO}/contents/${path}`;
 const body={message:message,content:btoa(unescape(encodeURIComponent(content))),branch:GITHUB_BRANCH};
 if(sha)body.sha=sha;
@@ -350,7 +357,7 @@ return response.json();
 }
 
 async function updateIndexPage(fileName,title,tag,content){
-const token=localStorage.getItem('github_token');
+const token=sessionStorage.getItem('github_token');
 const url=`https://api.github.com/repos/${GITHUB_OWNER}/${GITHUB_REPO}/contents/index.html`;
 const getResp=await fetch(url,{headers:{'Authorization':`token ${token}`}});
 if(!getResp.ok)throw new Error('无法读取 index.html');
@@ -404,14 +411,7 @@ statusDiv.innerHTML=`<div class="status ${type}">${message}</div>`;
 setTimeout(()=>statusDiv.innerHTML='',8000);
 }
 
-window.addEventListener('DOMContentLoaded',()=>{
-const params=new URLSearchParams(window.location.search);
-const editFile=params.get('edit');
-if(editFile){
-document.getElementById('editFileName').value=editFile;
-loadArticle();
-}
-});
+
 </script>
 </body>
 </html>
