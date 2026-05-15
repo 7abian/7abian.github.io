@@ -35,9 +35,9 @@ const template = `<!DOCTYPE html>
 
 <header>
   <div class="nav-container">
-    <div style="display:flex;gap:1rem">
+    <div class="header-left">
       <a href="index.html" class="back-btn">← 返回首页</a>
-      <div class="admin-only" style="display:none;gap:1rem">
+      <div class="admin-only">
         <a href="admin.html?edit=${filename}" class="back-btn">✏️ 编辑</a>
         <a href="#" onclick="deletePost('${filename}');return false" class="back-btn">🗑️ 删除</a>
       </div>

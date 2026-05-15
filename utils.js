@@ -36,7 +36,7 @@ document.querySelectorAll('pre').forEach(pre => {
     if (!resp.ok) return;
     const user = await resp.json();
     if (user.login === '7abian') {
-      document.querySelectorAll('.admin-only').forEach(el => el.style.display = 'flex');
+      document.querySelectorAll('.admin-only').forEach(el => el.classList.add('visible'));
     }
   } catch (e) {}
 })();

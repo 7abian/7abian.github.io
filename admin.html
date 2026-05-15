@@ -259,7 +259,7 @@ footer{text-align:center;padding:2rem;color:var(--muted);font-size:0.88rem;borde
 <div class="nav-container">
 <div class="header-left">
 <a href="index.html" class="back-btn">← 返回首页</a>
-<div class="admin-only" style="display:none;gap:1rem">
+<div class="admin-only">
 <a href="admin.html?edit=${fileName}" class="back-btn">✏️ 编辑</a>
 <a href="#" onclick="deletePost('${fileName}');return false" class="back-btn">🗑️ 删除</a>
 </div>
@@ -310,7 +310,7 @@ const resp=await fetch('https://api.github.com/user',{headers:{'Authorization':'
 if(resp.ok){
 const user=await resp.json();
 if(user.login==='7abian'){
-document.querySelectorAll('.admin-only').forEach(el=>el.style.display='flex');
+document.querySelectorAll('.admin-only').forEach(el=>el.classList.add('visible'));
 }
 }
 }catch(e){}
