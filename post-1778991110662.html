@@ -1,9 +1,10 @@
 <!DOCTYPE html>
 <html lang="zh-CN">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>网安“黑魂”通关指南：从被虐到守护世界的108种姿势 · MRNOKK's Blog</title>
+<meta charset=”UTF-8”>
+<meta name=”viewport” content=”width=device-width, initial-scale=1.0”>
+<title>网安”黑魂”通关指南：从被虐到守护世界的108种姿势 · MRNOKK's Blog</title>
+<link rel=”stylesheet” href=”styles.css”>
 <style>
 :root{--accent:#e07b58;--accent-hover:#f5a623;--glass-bg:rgba(255,255,255,0.07);--glass-bg-hover:rgba(255,255,255,0.11);--glass-border:rgba(255,255,255,0.13);--glass-blur:blur(16px);--text:#f0ede8;--muted:rgba(240,237,232,0.55)}
 *{box-sizing:border-box;margin:0;padding:0}
@@ -46,6 +47,7 @@ footer{text-align:center;padding:2rem;color:var(--muted);font-size:0.88rem;borde
 </style>
 </head>
 <body>
+<div class="progress-bar" id="progress" aria-hidden="true"></div>
 <div class="bg-wrap" aria-hidden="true">
 <div class="bg-orb orb-1"></div>
 <div class="bg-orb orb-2"></div>
@@ -53,9 +55,9 @@ footer{text-align:center;padding:2rem;color:var(--muted);font-size:0.88rem;borde
 </div>
 <header>
 <div class="nav-container">
-<div style="display:flex;gap:1rem">
+<div class="header-left">
 <a href="index.html" class="back-btn">← 返回首页</a>
-<div class="admin-only" style="display:none;gap:1rem">
+<div class="admin-only">
 <a href="admin.html?edit=post-1778991110662.html" class="back-btn">✏️ 编辑</a>
 <a href="#" onclick="deletePost('post-1778991110662.html');return false" class="back-btn">🗑️ 删除</a>
 </div>
@@ -639,61 +641,19 @@ ISO 27001主任审核员 + CISA
 <p>当你在Kali Linux的终端中输入第一个命令、在Wireshark中抓到第一个TCP包、在HTB中完成第一个靶机渗透时，通往网络空间安全的世界大门就已经为你敞开。愿你成为一名坚守底线的安全专家，用技术守护数字世界的安全。</p>
 
 </div>
-<div style="margin-top:3rem">
-<script src="https://giscus.app/client.js"
-data-repo="7abian/7abian.github.io"
-data-repo-id="R_kgDOSYQocQ"
-data-category="Announcements"
-data-category-id="DIC_kwDOSYQocc4C8n0P"
-data-mapping="pathname"
-data-strict="0"
-data-reactions-enabled="1"
-data-emit-metadata="0"
-data-input-position="bottom"
-data-theme="purple_dark"
-data-lang="zh-CN"
-crossorigin="anonymous"
-async>
-</script>
-</div>
+<nav class="post-nav" aria-label="文章导航">
+    <a href="index.html">
+      <span class="nav-label">← 返回首页</span>
+      <span class="nav-title">博客首页</span>
+    </a>
+    <div></div>
+  </nav>
+  <div id="comment-section" data-blog-comments data-page-path="post-1778991110662"></div>
 </div>
 <footer>
 <p>&copy; 2026 MRNOKK's Blog. 用心记录，分享成长。</p>
 </footer>
-<script>
-(async()=>{
-try{
-const resp=await fetch('https://api.github.com/user',{headers:{'Authorization':'token '+localStorage.getItem('github_token')}});
-if(resp.ok){
-const user=await resp.json();
-if(user.login==='7abian'){
-document.querySelectorAll('.admin-only').forEach(el=>el.style.display='flex');
-}
-}
-}catch(e){}
-})();
-async function deletePost(fileName){
-if(!confirm('确定要删除这篇文章吗？此操作不可恢复！'))return;
-try{
-const token=localStorage.getItem('github_token');
-const fileUrl='https://api.github.com/repos/7abian/7abian.github.io/contents/'+fileName;
-const resp=await fetch(fileUrl,{headers:{'Authorization':'token '+token}});
-if(!resp.ok)throw new Error('获取文件信息失败');
-const data=await resp.json();
-await fetch(fileUrl,{method:'DELETE',headers:{'Authorization':'token '+token,'Content-Type':'application/json'},body:JSON.stringify({message:'Delete post: '+fileName,sha:data.sha,branch:'main'})});
-const indexUrl='https://api.github.com/repos/7abian/7abian.github.io/contents/index.html';
-const indexResp=await fetch(indexUrl,{headers:{'Authorization':'token '+token}});
-if(indexResp.ok){
-const indexData=await indexResp.json();
-let indexHTML=decodeURIComponent(escape(atob(indexData.content)));
-const regex=new RegExp('<article[^>]*onclick="location\\.href=\''+fileName+'\'[^>]*>[\\s\\S]*?</article>\\s*','g');
-indexHTML=indexHTML.replace(regex,'');
-await fetch(indexUrl,{method:'PUT',headers:{'Authorization':'token '+token,'Content-Type':'application/json'},body:JSON.stringify({message:'Remove deleted post from index',content:btoa(unescape(encodeURIComponent(indexHTML))),sha:indexData.sha,branch:'main'})});
-}
-alert('文章已删除');
-window.location.href='index.html';
-}catch(e){alert('删除失败: '+e.message);}
-}
-</script>
+<script src="comments.js"></script>
+<script src="utils.js"></script>
 </body>
 </html>
