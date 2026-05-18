@@ -10,7 +10,13 @@ const GIFS=[
 {id:'mind-blown',label:'震惊',url:'https://media.giphy.com/media/Um3ljJl8jrnHy/giphy.gif'},
 {id:'applause',label:'鼓掌',url:'https://media.giphy.com/media/l3q2XhfQ8oCkm1Ts4/giphy.gif'},
 {id:'popcorn',label:'吃瓜',url:'https://media.giphy.com/media/tyqcJoNjNv0Fq/giphy.gif'},
-{id:'facepalm',label:'无语',url:'https://media.giphy.com/media/TJawtKM6OCKkvwCIqX/giphy.gif'}
+{id:'facepalm',label:'无语',url:'https://media.giphy.com/media/TJawtKM6OCKkvwCIqX/giphy.gif'},
+{id:'cry-laugh',label:'笑哭',url:'https://media.giphy.com/media/6ZDqROA9TZKaySA3GZ/giphy.gif'},
+{id:'cant-hold',label:'绷不住了',url:'https://media.giphy.com/media/Bqkh55khcGWhG/giphy.gif'},
+{id:'confused',label:'一脸懵',url:'https://media.giphy.com/media/26tPcU5DDLaXPrPGg/giphy.gif'},
+{id:'too-real',label:'太真实了',url:'https://media.giphy.com/media/QMHoU66sBXqqLqYvGO/giphy.gif'},
+{id:'minion-laugh',label:'不愧是你',url:'https://media.giphy.com/media/ltIFdjNAasOwVvKhvx/giphy.gif'},
+{id:'omg',label:'卧槽',url:'https://media.giphy.com/media/8pbvazy5Ih1kt9i3MM/giphy.gif'}
 ];
 const state={pagePath:(location.pathname.split('/').pop()||'index.html').replace(/\.html$/i,'')||'index'};
 const ok=()=>SUPABASE_URL.startsWith('https://')&&!SUPABASE_URL.includes('YOUR_PROJECT_ID')&&!SUPABASE_ANON_KEY.includes('YOUR_SUPABASE_ANON_PUBLIC_KEY');
