@@ -1,3 +1,19 @@
+// 动态计算阅读时间
+const postInfo = document.querySelector('.post-info');
+if (postInfo) {
+  const spans = postInfo.querySelectorAll('span');
+  spans.forEach(span => {
+    if (span.textContent.includes('阅读约')) {
+      const content = document.querySelector('.post-content');
+      if (content) {
+        const chars = content.textContent.replace(/\s+/g, '').length;
+        const minutes = Math.max(1, Math.round(chars / 400));
+        span.textContent = `阅读约 ${minutes} 分钟`;
+      }
+    }
+  });
+}
+
 // 阅读进度条
 window.addEventListener('scroll', () => {
   const bar = document.getElementById('progress');
