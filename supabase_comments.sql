@@ -58,3 +58,15 @@ create policy "Anyone can create comments"
 --   );
 
 -- 可选：在 Supabase Table Editor 里手动把 status 从 pending 改为 approved 即可显示。
+
+-- ============================================================
+-- 评论回复功能迁移（在 Supabase Dashboard SQL Editor 中运行）
+-- ============================================================
+
+-- 添加 parent_id 列：顶层评论为 null，回复指向父评论 id
+alter table public.comments
+  add column if not exists parent_id uuid references public.comments(id) on delete cascade;
+
+-- 加速按父评论查询回复
+create index if not exists comments_parent_id_idx
+  on public.comments (parent_id);
