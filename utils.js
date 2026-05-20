@@ -78,7 +78,7 @@ async function deletePost(fileName) {
       if (indexResp.ok) {
         const indexData = await indexResp.json();
         let indexHTML = decodeURIComponent(escape(atob(indexData.content)));
-        const regex = new RegExp('<article[^>]*onclick="location\\\\.href=\\'' + fileName + '\\'"[^>]*>[\\s\\S]*?</article>\\s*', 'g');
+        const regex = new RegExp("<article[^>]*onclick=\"location\\\\.href='" + fileName + "'\"[^>]*>[\\s\\S]*?</article>\\s*", 'g');
         indexHTML = indexHTML.replace(regex, '');
         await fetch(indexUrl, {
           method: 'PUT',
