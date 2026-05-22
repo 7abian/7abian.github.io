@@ -11,7 +11,18 @@
       "Bash(git commit:*)",
       "Bash(node -c:*)",
       "Skill(update-config)",
-      "Skill(update-config:*)"
+      "Skill(update-config:*)",
+      "Bash(gh repo *)",
+      "Bash(gh run *)",
+      "Bash(gh api *)",
+      "WebFetch(domain:7abian.github.io)",
+      "Bash(echo \"exit: $?\")",
+      "Bash(git -C /c/Users/MRNOKK/Desktop/7abian.github.io diff HEAD~1 --stat)",
+      "Bash(git -C /c/Users/MRNOKK/Desktop/7abian.github.io show HEAD --format=\"%s\" --stat)",
+      "Bash(git -C /c/Users/MRNOKK/Desktop/7abian.github.io diff HEAD~1 HEAD -- utils.js)",
+      "WebFetch(domain:api.github.com)",
+      "WebFetch(domain:github.com)",
+      "Bash(git -C /c/Users/MRNOKK/Desktop/7abian.github.io log --oneline -5 --all)"
     ]
   }
 }
