@@ -535,7 +535,7 @@ aside { display: flex; flex-direction: column; gap: 1.5rem; }
   background: rgba(255, 255, 255, 0.07);
   border: 1px solid var(--glass-border);
   border-radius: 10px;
-  padding: 0.55rem 0.9rem 0.55rem 2.2rem;
+  padding: 0.55rem 2rem 0.55rem 2.2rem;
   color: var(--text);
   font-size: 0.88rem;
   outline: none;
@@ -826,9 +826,9 @@ aside { display: flex; flex-direction: column; gap: 1.5rem; }
 .search-wrap { position: relative; }
 
 .search-clear {
-  position: absolute; right: 0.55rem; top: 50%; transform: translateY(-50%);
+  position: absolute; right: 0.5rem; top: 50%; transform: translateY(-50%); z-index: 1;
   background: none; border: none; color: var(--muted); cursor: pointer;
-  font-size: 0.9rem; padding: 0.2rem 0.4rem; line-height: 1; display: none;
+  font-size: 1rem; padding: 0.2rem 0.4rem; line-height: 1; display: none;
 }
 
 .search-clear.visible { display: block; }
