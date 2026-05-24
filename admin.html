@@ -26,6 +26,7 @@ h1{font-size:2rem;margin-bottom:2rem;text-align:center}
 .status{padding:1rem;border-radius:8px;margin-bottom:1rem}
 .status.success{background:rgba(34,197,94,0.2);border:1px solid rgba(34,197,94,0.4)}
 .status.error{background:rgba(239,68,68,0.2);border:1px solid rgba(239,68,68,0.4)}
+.header-left{display:flex;align-items:center;gap:0.75rem;flex-wrap:wrap;flex-shrink:0}
 .grid{display:grid;grid-template-columns:1fr 1fr;gap:2rem}
 @media (max-width:968px){.grid{grid-template-columns:1fr}}
 </style>
@@ -138,7 +139,7 @@ const data=await resp.json();
 const html=decodeURIComponent(escape(atob(data.content)));
 const titleMatch=html.match(/<h1>(.*?)<\/h1>/);
 const tagMatch=html.match(/<div class="post-tag">(.*?)<\/div>/);
-const contentMatch=html.match(/<div class="post-content">\s*([\s\S]*?)\s*<\/div>\s*<\/div>/);
+const contentMatch=html.match(/<div class="post-content">\s*([\s\S]*?)\s*<\/div>\s*(?:<nav|<div)/);
 if(titleMatch)document.getElementById('postTitle').value=titleMatch[1];
 if(tagMatch)document.getElementById('postTag').value=tagMatch[1];
 if(contentMatch){
@@ -263,8 +264,8 @@ ${htmlContent}
 <footer>
 <p>&copy; 2026 MRNOKK's Blog. 用心记录，分享成长。</p>
 </footer>
-<script src="comments.js"></script>
-<script src="utils.js"></script>
+<script src="comments.js"><\/script>
+<script src="utils.js"><\/script>
 </body>
 </html>`;
 }
