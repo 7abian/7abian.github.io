@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>挽救计划 · MRNOKK's Blog</title>
+<style>
+:root{--accent:#e07b58;--accent-hover:#f5a623;--glass-bg:rgba(255,255,255,0.07);--glass-bg-hover:rgba(255,255,255,0.11);--glass-border:rgba(255,255,255,0.13);--glass-blur:blur(16px);--text:#f0ede8;--muted:rgba(240,237,232,0.55)}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC","Microsoft YaHei",sans-serif;color:var(--text);line-height:1.7;min-height:100vh;overflow-x:hidden}
+.bg-wrap{position:fixed;inset:0;z-index:-1;background:linear-gradient(135deg,#0f0c29 0%,#1e1b4b 40%,#2d1b69 70%,#1a0533 100%)}
+.bg-orb{position:absolute;border-radius:50%;filter:blur(90px);opacity:0.3}
+.orb-1{width:500px;height:500px;background:radial-gradient(circle,#e07b58,transparent);top:-150px;left:-120px;animation:drift 12s ease-in-out infinite}
+.orb-2{width:400px;height:400px;background:radial-gradient(circle,#6c63ff,transparent);bottom:-100px;right:-100px;animation:drift 10s ease-in-out infinite reverse}
+.orb-3{width:300px;height:300px;background:radial-gradient(circle,#11998e,transparent);top:45%;left:55%;animation:drift 14s ease-in-out infinite;animation-delay:-5s}
+@keyframes drift{0%,100%{transform:translate(0,0)}33%{transform:translate(25px,-20px)}66%{transform:translate(-18px,18px)}}
+@media (prefers-reduced-motion:reduce){.bg-orb{animation:none}}
+header{position:sticky;top:0;z-index:100;background:rgba(15,12,41,0.55);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);border-bottom:1px solid var(--glass-border);padding:1rem 2rem}
+.nav-container{max-width:900px;margin:0 auto;display:flex;justify-content:space-between;align-items:center}
+.logo{font-size:1.2rem;font-weight:700;background:linear-gradient(90deg,var(--accent),var(--accent-hover));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;text-decoration:none;display:flex;align-items:center;gap:0.6rem}
+.avatar{width:50px;height:50px;border-radius:50%;object-fit:cover;border:2px solid var(--glass-border);box-shadow:0 2px 8px rgba(0,0,0,0.3);flex-shrink:0}
+.back-btn{color:var(--muted);text-decoration:none;font-size:0.9rem;display:flex;align-items:center;gap:0.4rem;transition:color 0.2s}
+.back-btn:hover{color:var(--text)}
+.post-wrap{max-width:820px;margin:0 auto;padding:3rem 2rem 2rem}
+.post-hero{text-align:center;margin-bottom:2rem}
+.post-tag{background:rgba(224,123,88,0.16);color:var(--accent);padding:0.25rem 0.75rem;border-radius:20px;font-size:0.8rem;font-weight:500;border:1px solid rgba(224,123,88,0.28);display:inline-block;margin-bottom:1rem}
+.post-hero h1{font-size:2.4rem;font-weight:800;letter-spacing:-1px;line-height:1.25;margin-bottom:1rem;background:linear-gradient(135deg,#ffffff 0%,rgba(240,237,232,0.7) 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.post-info{display:flex;justify-content:center;gap:1.5rem;color:var(--muted);font-size:0.85rem}
+.post-content{background:var(--glass-bg);backdrop-filter:var(--glass-blur);-webkit-backdrop-filter:var(--glass-blur);border:1px solid var(--glass-border);border-radius:16px;padding:2.5rem 3rem;box-shadow:0 4px 24px rgba(0,0,0,0.25)}
+.post-content h2{font-size:1.45rem;font-weight:700;margin:2.2rem 0 1rem;color:var(--text);padding-bottom:0.5rem;border-bottom:1px solid rgba(255,255,255,0.1)}
+.post-content h2:first-child{margin-top:0}
+.post-content h3{font-size:1.1rem;font-weight:600;margin:1.6rem 0 0.75rem;color:rgba(240,237,232,0.9)}
+.post-content p{color:rgba(240,237,232,0.78);line-height:1.85;margin-bottom:1.2rem;font-size:1rem}
+.post-content ul,.post-content ol{color:rgba(240,237,232,0.78);padding-left:1.6rem;margin-bottom:1.2rem}
+.post-content li{margin-bottom:0.45rem;line-height:1.75}
+.post-content strong{color:var(--text);font-weight:600}
+.post-content em{font-style:italic}
+.post-content a{color:var(--accent);text-decoration:underline;text-underline-offset:2px}
+.post-content blockquote{border-left:3px solid var(--accent);padding:0.8rem 1.2rem;background:rgba(224,123,88,0.08);border-radius:0 8px 8px 0;margin:1.2rem 0;color:rgba(240,237,232,0.75);font-style:italic}
+.post-content hr{border:none;border-top:1px solid rgba(255,255,255,0.1);margin:2rem 0}
+.post-content pre{background:rgba(0,0,0,0.4);border:1px solid rgba(255,255,255,0.08);border-radius:10px;padding:1.2rem 1.5rem;overflow-x:auto;margin:1.2rem 0}
+.post-content code{font-family:"JetBrains Mono","Fira Code",Consolas,monospace;font-size:0.87rem;color:#e2e8f0;line-height:1.7}
+.post-content p>code,.post-content li>code{background:rgba(255,255,255,0.1);padding:0.15rem 0.45rem;border-radius:4px;font-size:0.86rem;color:#fbbf8a}
+footer{text-align:center;padding:2rem;color:var(--muted);font-size:0.88rem;border-top:1px solid rgba(255,255,255,0.07);margin-top:1rem}
+@media (max-width:768px){.post-hero h1{font-size:1.8rem}.post-content{padding:1.5rem}.post-wrap{padding:2rem 1.2rem}}
+</style>
+</head>
+<body>
+<div class="bg-wrap" aria-hidden="true">
+<div class="bg-orb orb-1"></div>
+<div class="bg-orb orb-2"></div>
+<div class="bg-orb orb-3"></div>
+</div>
+<header>
+<div class="nav-container">
+<div class="header-left">
+<a href="index.html" class="back-btn">← 返回首页</a>
+<div class="admin-only">
+<a href="admin.html?edit=post-1779585115764.html" class="back-btn">✏️ 编辑</a>
+<a href="#" onclick="deletePost('post-1779585115764.html');return false" class="back-btn">🗑️ 删除</a>
+</div>
+</div>
+<a href="index.html" class="logo">
+<img src="images/avatar02.jpg" alt="MRNOKK" class="avatar">
+<span>MRNOKK's Blog</span>
+</a>
+</div>
+</header>
+<div class="post-wrap">
+<div class="post-hero">
+<div class="post-tag">技术</div>
+<h1>挽救计划</h1>
+<div class="post-info">
+<span>2026-05-24</span>
+<span>阅读约 5 分钟</span>
+</div>
+</div>
+<div class="post-content">
+<p>《挽救计划》是一部将严谨科学精神与温暖人文内核精妙结合的“乐观硬科幻”杰作。它讲述了一个以严谨科学逻辑解谜、以真挚友谊拯救文明的宇宙传奇。以下从科学和体验两个维度进行深度拆解。</p>
+<h3>从科学视角审视：基石、边界与争议</h3>
+<h4>硬科幻的基石：现实世界的科学延伸</h4>
+<p>《挽救计划》最令人称道的，是其对科学细节的极致追求，几乎每个数字都有来历，将晦涩原理转化为叙事的一部分。</p>
+<ul>
+<li><strong>严谨的计算与推导</strong>：作者安迪·威尔亲自撰写片中的科学设定与数学公式。例如，主角通过计算得出了约<strong>2.895e7 m/s</strong>的飞船速度，并通过严谨推算得出返回地球的时间约<strong>113.8年</strong>。影片中基于相对论的时间膨胀效应也被精准呈现。</li>
+<li><strong>工程师思维的核心叙事</strong>：故事的核心不是主角光环，而是“发现问题-提出假设-设计实验-解决问题”的工程师思维，传递了真实的科学方法论。主角用<strong>10微米直径、恒温96.415度</strong>的“噬星体”参数进行推理，并用数学与外星人沟通的过程，生动诠释了宇宙通用语言的魅力。</li>
+<li><strong>扎根现实的科技投影</strong>：影片中的科技大多有现实科学依据作为支撑。从“光帆”到离子推进，再到对氙（Xenon）的利用，都展现了对前沿物理概念的大胆推演。</li>
+</ul>
+<h4>真实性的边界：科学推测与设定“硬伤”</h4>
+<p>作品也并非完美无缺，一些设定遭到了科学家的质疑：</p>
+<ul>
+<li><strong>核心设定的争议</strong>：书中“噬星体”能大量吞噬恒星能量是核心设定，但有天体物理学家指出，恒星极其巨大，要影响其发光需要天文数字般的微生物，这在现实中是几乎不可能的。</li>
+<li><strong>具体细节的“bug”</strong>：<ul>
+<li><strong>燃料数量矛盾</strong>：影片开头显示的燃料数据与小说原著的<strong>200万千克</strong>设定存在出入。</li>
+<li><strong>波长计算瑕疵</strong>：在计算噬星体释放的红外光波长时，作者忽略了高速运动下必须考虑的<strong>多普勒效应</strong>。</li>
+<li><strong>实验操作失真</strong>：有批评者认为，部分基础实验操作的描写显得失实，未能完全融入叙事逻辑。</li>
+</ul>
+</li>
+</ul>
+<p>值得注意的是，这些争议大多源于作者为了戏剧张力而向物理学定律发起的“极限挑战”，但也在可接受的科幻创作范围内。</p>
+<h3>从读者/影视视角总结：一场献给所有人的智力冒险</h3>
+<h4>阅读体验：硬核与通俗的精妙平衡</h4>
+<p>这部小说被读者称为“有史以来最硬的科幻之一”，但它的阅读体验却出奇地流畅。第一人称的叙述方式，让硬核的科学知识被巧妙消解在幽默的内心独白和主角的碎碎念中。巧妙的<strong>双线叙事</strong>（太空求生与地球回忆）更是营造了强烈的悬疑感。在Goodreads上获得<strong>130万读者打出4.50分</strong>的佳绩。</p>
+<h4>影视呈现：视觉奇观与情感共鸣的胜利</h4>
+<p>电影版凭借顶级制作，将纸上奇观成功影像化：</p>
+<ul>
+<li><strong>制作规模</strong>：由<strong>瑞恩·高斯林</strong>主演，成本超<strong>2亿美元</strong>。</li>
+<li><strong>沉浸式视觉</strong>：制作组采用全程 <strong>“零绿幕”</strong> 及<strong>1:1实景搭建飞船</strong>，以最大化演员和观众的沉浸感。片尾更是直接采用<strong>真实星云影像</strong>，将宇宙的壮丽景象真实地呈现在观众眼前。</li>
+<li><strong>口碑评价</strong>：影片口碑不俗，烂番茄新鲜度高达<strong>96%</strong>，IMDb获评<strong>8.5分</strong>，国内豆瓣开分<strong>8.5分</strong>，并被许多观众誉为“科幻影史新里程碑”。北美首周末票房达<strong>7700万美元</strong>，展现了强大的市场号召力。</li>
+<li><strong>改编策略</strong>：影片将枯燥的科学推导转化为更具冲击力的<strong>心理蒙太奇</strong>和<strong>视听奇观</strong>，保留了硬核科幻的底色，同时降低了观影门槛。不过，也有评论认为此举削弱了原著部分智力快感，且片中一些幽默桥段稍显幼稚。</li>
+<li><strong>情感核心</strong>：影片最动人的力量，在于两个肩负文明存亡重担的孤独灵魂，从小心翼翼地试探到成为彼此唯一的依靠。这段横跨星际的真挚友谊，为宏大冰冷的科幻注入了直抵人心的温暖与希望。</li>
+</ul>
+<p>总的来说，《挽救计划》完美诠释了“科学本身就是一种浪漫”。它不仅展现了用知识解决现实危机的智力之美，更在宏大宇宙背景下，讴歌了跨越物种的真挚友谊和永不言弃的人类精神。它提醒我们，面对浩瀚星空，我们最好的导航仪是科学，而我们最宝贵的燃料，是善良与勇气。</p>
+
+</div>
+<div style="margin-top:3rem">
+<script src="https://giscus.app/client.js"
+data-repo="7abian/7abian.github.io"
+data-repo-id="R_kgDOSYQocQ"
+data-category="Announcements"
+data-category-id="DIC_kwDOSYQocc4C8n0P"
+data-mapping="pathname"
+data-strict="0"
+data-reactions-enabled="1"
+data-emit-metadata="0"
+data-input-position="bottom"
+data-theme="purple_dark"
+data-lang="zh-CN"
+crossorigin="anonymous"
+async>
+</script>
+</div>
+</div>
+<footer>
+<p>&copy; 2026 MRNOKK's Blog. 用心记录，分享成长。</p>
+</footer>
+<script>
+(async()=>{
+try{
+const resp=await fetch('https://api.github.com/user',{headers:{'Authorization':'token '+sessionStorage.getItem('github_token')}});
+if(resp.ok){
+const user=await resp.json();
+if(user.login==='7abian'){
+document.querySelectorAll('.admin-only').forEach(el=>el.classList.add('visible'));
+}
+}
+}catch(e){}
+})();
+async function deletePost(fileName){
+if(!confirm('确定要删除这篇文章吗？此操作不可恢复！'))return;
+try{
+const token=sessionStorage.getItem('github_token');
+const fileUrl='https://api.github.com/repos/7abian/7abian.github.io/contents/'+fileName;
+const resp=await fetch(fileUrl,{headers:{'Authorization':'token '+token}});
+if(!resp.ok)throw new Error('获取文件信息失败');
+const data=await resp.json();
+await fetch(fileUrl,{method:'DELETE',headers:{'Authorization':'token '+token,'Content-Type':'application/json'},body:JSON.stringify({message:'Delete post: '+fileName,sha:data.sha,branch:'main'})});
+const indexUrl='https://api.github.com/repos/7abian/7abian.github.io/contents/index.html';
+const indexResp=await fetch(indexUrl,{headers:{'Authorization':'token '+token}});
+if(indexResp.ok){
+const indexData=await indexResp.json();
+let indexHTML=decodeURIComponent(escape(atob(indexData.content)));
+const regex=new RegExp('<article[^>]*onclick="location\\.href=\''+fileName+'\'[^>]*>[\\s\\S]*?</article>\\s*','g');
+indexHTML=indexHTML.replace(regex,'');
+await fetch(indexUrl,{method:'PUT',headers:{'Authorization':'token '+token,'Content-Type':'application/json'},body:JSON.stringify({message:'Remove deleted post from index',content:btoa(unescape(encodeURIComponent(indexHTML))),sha:indexData.sha,branch:'main'})});
+}
+alert('文章已删除');
+window.location.href='index.html';
+}catch(e){alert('删除失败: '+e.message);}
+}
+</script>
+</body>
+</html>
