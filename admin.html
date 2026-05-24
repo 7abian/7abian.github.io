@@ -177,17 +177,33 @@ const isEdit=!!editFileName;
 btn.textContent=isEdit?'更新中...':'发布中...';
 
 try{
-const fileName=isEdit?editFileName:`post-${Date.now()}.html`;
-const html=generatePostHTML(title,tag,content,fileName);
-let sha=null;
-if(isEdit){
 const token=sessionStorage.getItem('github_token');
+const fileName=isEdit?editFileName:`post-${Date.now()}.html`;
+let nextPostFile=null,nextPostTitle=null,sha=null,existingNav=null;
+if(!isEdit){
+const idxUrl=`https://api.github.com/repos/${GITHUB_OWNER}/${GITHUB_REPO}/contents/index.html`;
+const idxResp=await fetch(idxUrl,{headers:{'Authorization':`token ${token}`}});
+if(idxResp.ok){
+const idxData=await idxResp.json();
+const idxHTML=decodeURIComponent(escape(atob(idxData.content)));
+const firstMatch=idxHTML.match(/<article onclick="location\.href='([^']+)'">[\s\S]*?<h2>(.*?)<\/h2>/);
+if(firstMatch){nextPostFile=firstMatch[1];nextPostTitle=firstMatch[2];}
+}
+} else {
 const url=`https://api.github.com/repos/${GITHUB_OWNER}/${GITHUB_REPO}/contents/${fileName}`;
 const resp=await fetch(url,{headers:{'Authorization':`token ${token}`}});
-if(resp.ok){const data=await resp.json();sha=data.sha;}
+if(resp.ok){const data=await resp.json();sha=data.sha;
+const postHTML=decodeURIComponent(escape(atob(data.content)));
+const navMatch=postHTML.match(/<nav class="post-nav"[^>]*>([\s\S]*?)<\/nav>/);
+if(navMatch)existingNav=navMatch[0];
 }
+}
+const html=generatePostHTML(title,tag,content,fileName,nextPostFile,nextPostTitle,existingNav);
 await commitFile(fileName,html,isEdit?`Update post: ${title}`:`Add new post: ${title}`,sha);
-if(!isEdit)await updateIndexPage(fileName,title,tag,content);
+if(!isEdit){
+await updateIndexPage(fileName,title,tag,content);
+if(nextPostFile)await updatePostPrevNav(nextPostFile,fileName,title);
+}
 showStatus(isEdit?'文章更新成功！':'文章发布成功！首页已自动更新','success');
 document.getElementById('postTitle').value='';
 document.getElementById('postContent').value='';
@@ -201,10 +217,19 @@ btn.textContent='发布文章';
 }
 }
 
-function generatePostHTML(title,tag,mdContent,fileName){
+function generatePostHTML(title,tag,mdContent,fileName,nextPostFile,nextPostTitle,existingNav){
 const htmlContent=marked.parse(mdContent);
 const date=new Date().toISOString().split('T')[0];
   const pagePath = fileName.replace('.html', '');
+  const prevLink = nextPostFile
+  ? `<div class="placeholder"></div>`
+  : `<div class="placeholder"></div>`;
+  const nextLink = nextPostFile
+  ? `<a href="${nextPostFile}" class="next-link">
+  <span class="nav-label">下一篇 →</span>
+  <span class="nav-title">${nextPostTitle}</span>
+  </a>`
+  : `<div class="placeholder"></div>`;
   return `<!DOCTYPE html>
 <html lang="zh-CN">
 <head>
@@ -253,11 +278,7 @@ const date=new Date().toISOString().split('T')[0];
 ${htmlContent}
 </div>
 <nav class="post-nav" aria-label="文章导航">
-<a href="index.html">
-<span class="nav-label">← 上一篇</span>
-<span class="nav-title">返回首页</span>
-</a>
-<div></div>
+${existingNav || prevLink+"\n"+nextLink}
 </nav>
 <div id="comment-section" data-blog-comments data-page-path="${pagePath}"></div>
 </div>
@@ -331,6 +352,28 @@ branch:GITHUB_BRANCH
 })
 });
 if(!putResp.ok)throw new Error('无法更新 index.html');
+}
+
+async function updatePostPrevNav(postFile,prevFile,prevTitle){
+const token=sessionStorage.getItem('github_token');
+const url=`https://api.github.com/repos/${GITHUB_OWNER}/${GITHUB_REPO}/contents/${postFile}`;
+const getResp=await fetch(url,{headers:{'Authorization':`token ${token}`}});
+if(!getResp.ok)throw new Error('无法读取 '+postFile);
+const data=await getResp.json();
+let postHTML=decodeURIComponent(escape(atob(data.content)));
+const prevLink=`<a href="${prevFile}">\n      <span class="nav-label">← 上一篇</span>\n      <span class="nav-title">${prevTitle}</span>\n    </a>`;
+postHTML=postHTML.replace('<div class="placeholder"></div>',prevLink);
+const putResp=await fetch(url,{
+method:'PUT',
+headers:{'Authorization':`token ${token}`,'Content-Type':'application/json'},
+body:JSON.stringify({
+message:`Update nav: ${postFile} prev → ${prevFile}`,
+content:btoa(unescape(encodeURIComponent(postHTML))),
+sha:data.sha,
+branch:GITHUB_BRANCH
+})
+});
+if(!putResp.ok)throw new Error('无法更新 '+postFile);
 }
 
 function showStatus(message,type){
