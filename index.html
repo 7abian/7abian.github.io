@@ -273,19 +273,6 @@
     setTimeout(tick, 300);
   })();
 
-  // ── Reading time for article cards ──
-  (() => {
-    document.querySelectorAll('.posts article').forEach(card => {
-      const text = card.textContent.replace(/\s+/g, '');
-      const minutes = Math.max(1, Math.round(text.length / 400));
-      const el = document.createElement('span');
-      el.className = 'post-reading-time';
-      el.textContent = `📖 阅读约 ${minutes} 分钟`;
-      const meta = card.querySelector('.post-meta');
-      if (meta) meta.insertAdjacentElement('afterend', el);
-    });
-  })();
-
   // ── Tag counts ──
   (() => {
     const counts = {};
