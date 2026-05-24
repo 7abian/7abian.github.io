@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+<channel>
+  <title>MRNOKK's Blog</title>
+  <link>https://7abian.github.io</link>
+  <description>记录学习、生活与思考的点滴 — 关于代码、安全与日常。网络安全爱好者、全栈开发者、终身学习者。</description>
+  <language>zh-CN</language>
+  <lastBuildDate>Sat, 17 May 2026 00:00:00 +0800</lastBuildDate>
+  <atom:link href="https://7abian.github.io/rss.xml" rel="self" type="application/rss+xml"/>
+
+  <item>
+    <title>网安"黑魂"通关指南：从被虐到守护世界的108种姿势</title>
+    <link>https://7abian.github.io/post-1778991110662.html</link>
+    <pubDate>Sat, 17 May 2026 00:00:00 +0800</pubDate>
+    <description>2026年，全球网络安全市场规模已突破3000亿美元，国内产业规模预计突破2500亿元，人才缺口高达327万。</description>
+    <category>网络安全</category>
+  </item>
+
+  <item>
+    <title>《挽救计划》核心科学理论深度解析</title>
+    <link>https://7abian.github.io/post-1778301991043.html</link>
+    <pubDate>Fri, 09 May 2026 00:00:00 +0800</pubDate>
+    <description>《挽救计划》被誉为近年来最硬核的科幻作品之一，其魅力在于几乎所有天马行空的设定背后，都有牢固的科学理论或逻辑推演作为支撑。</description>
+    <category>随笔</category>
+  </item>
+
+  <item>
+    <title>《火星救援》科学理论业余分析</title>
+    <link>https://7abian.github.io/post-1778299395193.html</link>
+    <pubDate>Fri, 09 May 2026 00:00:00 +0800</pubDate>
+    <description>《火星救援》被誉为近十年最"硬"的科幻作品之一，其核心魅力在于几乎所有生存方案都建立在真实且可验证的科学原理之上。</description>
+    <category>随笔</category>
+  </item>
+
+  <item>
+    <title>渗透测试中的漏洞扫描：从自动化到深度利用的艺术</title>
+    <link>https://7abian.github.io/post-5.html</link>
+    <pubDate>Fri, 09 May 2026 00:00:00 +0800</pubDate>
+    <description>在渗透测试的完整杀伤链中，漏洞扫描常被误解为仅需点击"开始扫描"的机械化动作。高质量的扫描结果直接决定了后续漏洞利用的成败。</description>
+    <category>安全</category>
+  </item>
+
+  <item>
+    <title>开始我的博客之旅</title>
+    <link>https://7abian.github.io/post-1.html</link>
+    <pubDate>Fri, 09 May 2026 00:00:00 +0800</pubDate>
+    <description>这是博客的第一篇文章。在这里分享学习编程、网络安全、以及各种技术领域的心得体会。</description>
+    <category>技术</category>
+  </item>
+
+  <item>
+    <title>漏洞扫描的基础知识</title>
+    <link>https://7abian.github.io/post-2.html</link>
+    <pubDate>Thu, 08 May 2026 00:00:00 +0800</pubDate>
+    <description>漏洞扫描是网络安全工作中的重要一环。介绍常见的漏洞扫描工具、扫描流程，以及如何分析扫描结果。</description>
+    <category>网络安全</category>
+  </item>
+
+  <item>
+    <title>HTML/CSS 入门指南</title>
+    <link>https://7abian.github.io/post-3.html</link>
+    <pubDate>Thu, 07 May 2026 00:00:00 +0800</pubDate>
+    <description>从零开始学习网页开发？了解 HTML 与 CSS 的基础知识，并通过实例演示如何创建一个简洁美观的页面。</description>
+    <category>前端</category>
+  </item>
+
+  <item>
+    <title>关于学习的一些思考</title>
+    <link>https://7abian.github.io/post-4.html</link>
+    <pubDate>Mon, 05 May 2026 00:00:00 +0800</pubDate>
+    <description>持续学习是程序员的必修课。在快速变化的技术世界里，如何保持学习的动力与方向？分享一些个人的方法论。</description>
+    <category>随笔</category>
+  </item>
+
+</channel>
+</rss>
