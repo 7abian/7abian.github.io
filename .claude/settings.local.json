@@ -23,7 +23,11 @@
       "WebFetch(domain:api.github.com)",
       "WebFetch(domain:github.com)",
       "Bash(git -C /c/Users/MRNOKK/Desktop/7abian.github.io log --oneline -5 --all)",
-      "Bash(git checkout *)"
+      "Bash(git checkout *)",
+      "Bash(node -e ' *)",
+      "Bash(node tools/fix-admin.js)",
+      "Bash(node -e \"try { require\\('fs'\\).readFileSync\\('/c/Users/MRNOKK/Desktop/7abian.github.io/admin.html','utf8'\\); console.log\\('File readable'\\); } catch\\(e\\) { console.log\\('Error:', e.message\\); }\")",
+      "Bash(node -e \"const c = require\\('fs'\\).readFileSync\\('c:/Users/MRNOKK/Desktop/7abian.github.io/admin.html','utf8'\\); const idx = c.indexOf\\('generatePostHTML'\\); const end = c.indexOf\\('async function commitFile'\\); console.log\\('generatePostHTML section length:', end - idx, 'chars'\\); console.log\\('Has styles.css:', c.includes\\('styles.css'\\)\\); console.log\\('Has comments.js:', c.includes\\('comments.js'\\)\\); console.log\\('Has Giscus:', c.includes\\('giscus'\\)\\); console.log\\('Has progress-bar:', c.includes\\('progress-bar'\\)\\); console.log\\('Has favicon:', c.includes\\('favicon.svg'\\)\\); console.log\\('Has og:title:', c.includes\\('og:title'\\)\\);\")"
     ]
   }
 }
