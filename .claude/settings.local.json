@@ -33,7 +33,9 @@
       "Bash(node -e \"const fs=require\\('fs'\\);let h=fs.readFileSync\\('index.html','utf8'\\);h=h.replace\\(/“/g,'\\\\\"'\\).replace\\(/”/g,'\\\\\"'\\);fs.writeFileSync\\('index.html',h\\);console.log\\('Done'\\)\")",
       "Bash(rm \"c:/Users/MRNOKK/Desktop/7abian.githubio/tools/fix-nav.js\" 2>/dev/null; rmdir \"c:/Users/MRNOKK/Desktop/7abian.githubio/tools\" 2>/dev/null; rmdir \"c:/Users/MRNOKK/Desktop/7abian.githubio\" 2>/dev/null; echo \"cleaned\")",
       "Bash(node tools/fix-nav.js)",
-      "Bash(node tools/fix-publish.js)"
+      "Bash(node tools/fix-publish.js)",
+      "Bash(curl -s http://localhost:8080/styles.css)",
+      "Bash(curl -s http://localhost:8080/index.html)"
     ],
     "additionalDirectories": [
       "c:\\Users\\MRNOKK\\Desktop\\7abian.githubio\\tools",
