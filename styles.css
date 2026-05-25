@@ -713,7 +713,7 @@ aside { display: flex; flex-direction: column; gap: 1.5rem; }
 .post-nav .nav-label { font-size: 0.75rem; color: var(--muted); margin-bottom: 0.35rem; }
 .post-nav .nav-title { font-size: 0.9rem; font-weight: 500; color: var(--text); }
 .post-nav .next-link { text-align: right; }
-.post-nav .placeholder { display: none; }
+.post-nav .placeholder { visibility: hidden; pointer-events: none; padding: 1rem 1.4rem; }
 
 /* ── POST: Comments ── */
 .comment-form input,
