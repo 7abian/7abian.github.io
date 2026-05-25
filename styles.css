@@ -53,8 +53,9 @@ body {
 .orb-1 {
   width: 500px; height: 500px;
   background: radial-gradient(circle, #e07b58 0%, transparent 70%);
+  filter: blur(130px); opacity: 0.18;
   top: -150px; left: -120px;
-  animation: drift 12s ease-in-out infinite;
+  animation: drift 14s ease-in-out infinite;
 }
 
 .orb-2 {
