@@ -686,10 +686,13 @@ aside { display: flex; flex-direction: column; gap: 1.5rem; }
 
 /* ── POST: Navigation ── */
 .post-nav {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
+  display: flex;
   gap: 1rem;
   margin-top: 2rem;
+}
+.post-nav > * {
+  flex: 1;
+  min-width: 0;
 }
 
 .post-nav a {
@@ -710,7 +713,7 @@ aside { display: flex; flex-direction: column; gap: 1.5rem; }
 .post-nav .nav-label { font-size: 0.75rem; color: var(--muted); margin-bottom: 0.35rem; }
 .post-nav .nav-title { font-size: 0.9rem; font-weight: 500; color: var(--text); }
 .post-nav .next-link { text-align: right; }
-.post-nav .placeholder { pointer-events: none; opacity: 0; }
+.post-nav .placeholder { display: none; }
 
 /* ── POST: Comments ── */
 .comment-form input,
@@ -857,7 +860,7 @@ aside { display: flex; flex-direction: column; gap: 1.5rem; }
   .post-hero h1 { font-size: 1.8rem; }
   .post-content { padding: 1.5rem; }
   .post-wrap { padding: 2rem 1.2rem; }
-  .post-nav { grid-template-columns: 1fr; }
+  .post-nav { flex-direction: column; }
   .page-hero h1 { font-size: 1.8rem; }
   .page-content { padding: 1.5rem; }
   .page-wrap { padding: 2rem 1.2rem; }
