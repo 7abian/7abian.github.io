@@ -11,65 +11,56 @@ class Analytics {
 
   async loadRealTimeStats() {
     try {
-      const [totalResp, todayResp, articlesResp] = await Promise.all([
-        fetch(`https://api.countapi.xyz/get/${this.namespace}/total`),
-        this.getTodayCount(),
-        this.fetchArticlesStats()
+      const results = await Promise.all([
+        fetch(`https://api.countapi.xyz/get/${this.namespace}/total`).then(r => r.json()).catch(() => ({ value: 0 })),
+        this.fetchTodayCount(),
+        this.fetchArticlesStats(),
+        this.fetchDailyStats()
       ]);
       
-      const total = totalResp.ok ? parseInt((await totalResp.json()).value) || 0 : 0;
-      const today = todayResp;
-      const weekly = await this.getWeeklyStats();
+      const total = parseInt(results[0].value) || 0;
+      const today = results[1];
+      const articles = results[2];
+      const daily = results[3];
+      const weekly = this.calculateWeekly(daily);
       
-      this.stats = {
-        total,
-        today,
-        weekly,
-        articles: articlesResp || {},
-        daily: await this.fetchDailyStats()
-      };
+      this.stats = { total, today, weekly, articles, daily };
     } catch (e) {
-      console.warn('Failed to load real-time analytics:', e);
-      await this.fallbackToLocal();
+      console.warn('Analytics load error:', e);
+      this.stats = { total: 0, today: 0, weekly: 0, articles: {}, daily: {} };
     }
   }
 
-  async getTodayCount() {
+  async fetchTodayCount() {
     const today = new Date().toISOString().split('T')[0];
-    const resp = await fetch(`https://api.countapi.xyz/hit/${this.namespace}/day-${today}`);
-    if (resp.ok) {
-      return parseInt((await resp.json()).value) || 0;
+    try {
+      const resp = await fetch(`https://api.countapi.xyz/get/${this.namespace}/day-${today}`);
+      const data = await resp.json();
+      return parseInt(data.value) || 0;
+    } catch {
+      return 0;
     }
-    return 0;
-  }
-
-  async getWeeklyStats() {
-    let total = 0;
-    for (let i = 0; i < 7; i++) {
-      const date = new Date();
-      date.setDate(date.getDate() - i);
-      const dateStr = date.toISOString().split('T')[0];
-      const resp = await fetch(`https://api.countapi.xyz/get/${this.namespace}/day-${dateStr}`);
-      if (resp.ok) {
-        total += parseInt((await resp.json()).value) || 0;
-      }
-    }
-    return total;
   }
 
   async fetchDailyStats() {
     const daily = {};
+    const promises = [];
+    
     for (let i = 13; i >= 0; i--) {
       const date = new Date();
       date.setDate(date.getDate() - i);
       const dateStr = date.toISOString().split('T')[0];
-      const resp = await fetch(`https://api.countapi.xyz/get/${this.namespace}/day-${dateStr}`);
-      if (resp.ok) {
-        daily[dateStr] = parseInt((await resp.json()).value) || 0;
-      } else {
-        daily[dateStr] = 0;
-      }
+      
+      promises.push(
+        fetch(`https://api.countapi.xyz/get/${this.namespace}/day-${dateStr}`)
+          .then(r => r.json())
+          .then(data => ({ date: dateStr, count: parseInt(data.value) || 0 }))
+          .catch(() => ({ date: dateStr, count: 0 }))
+      );
     }
+    
+    const results = await Promise.all(promises);
+    results.forEach(r => { daily[r.date] = r.count; });
     return daily;
   }
 
@@ -81,24 +72,27 @@ class Analytics {
       'post-1779587180030.html', 'post-1779670042468.html'
     ];
     
-    for (const article of articleList) {
-      const resp = await fetch(`https://api.countapi.xyz/get/${this.namespace}/${article}`);
-      if (resp.ok) {
-        articles[article] = parseInt((await resp.json()).value) || 0;
-      }
-    }
+    const promises = articleList.map(article =>
+      fetch(`https://api.countapi.xyz/get/${this.namespace}/${article}`)
+        .then(r => r.json())
+        .then(data => ({ article, views: parseInt(data.value) || 0 }))
+        .catch(() => ({ article, views: 0 }))
+    );
+    
+    const results = await Promise.all(promises);
+    results.forEach(r => { articles[r.article] = r.views; });
     return articles;
   }
 
-  async fallbackToLocal() {
-    try {
-      const resp = await fetch('stats.json?' + Date.now());
-      if (resp.ok) {
-        this.stats = await resp.json();
-      }
-    } catch (e) {
-      this.stats = { total: 0, today: 0, weekly: 0, articles: {}, daily: {} };
+  calculateWeekly(daily) {
+    let total = 0;
+    for (let i = 0; i < 7; i++) {
+      const date = new Date();
+      date.setDate(date.getDate() - i);
+      const dateStr = date.toISOString().split('T')[0];
+      total += daily[dateStr] || 0;
     }
+    return total;
   }
 
   async trackVisit() {
@@ -111,8 +105,6 @@ class Analytics {
         fetch(`https://api.countapi.xyz/hit/${this.namespace}/day-${today}`),
         fetch(`https://api.countapi.xyz/hit/${this.namespace}/${path}`)
       ]);
-      
-      await this.loadRealTimeStats();
     } catch (e) {
       console.warn('Failed to track visit:', e);
     }
@@ -159,7 +151,7 @@ class Analytics {
   renderWeeklyVisits() {
     const el = document.getElementById('stats-week');
     if (el && this.stats) {
-      el.textContent = this.formatNumber(this.getWeeklyStats());
+      el.textContent = this.formatNumber(this.stats.weekly);
     }
   }
 
@@ -235,11 +227,6 @@ class Analytics {
       ctx.arc(x, y, 4, 0, Math.PI * 2);
       ctx.fillStyle = '#e07b58';
       ctx.fill();
-      
-      ctx.beginPath();
-      ctx.arc(x, y, 6, 0, Math.PI * 2);
-      ctx.strokeStyle = 'rgba(224, 123, 88, 0.3)';
-      ctx.stroke();
     });
     
     ctx.fillStyle = 'rgba(240, 237, 232, 0.5)';
@@ -262,21 +249,5 @@ class Analytics {
       return (num / 1000).toFixed(1) + 'k';
     }
     return num.toString();
-  }
-
-  getWeeklyStats() {
-    if (!this.stats?.daily) return 0;
-    
-    const today = new Date();
-    let total = 0;
-    
-    for (let i = 0; i < 7; i++) {
-      const date = new Date(today);
-      date.setDate(date.getDate() - i);
-      const dateStr = date.toISOString().split('T')[0];
-      total += this.stats.daily[dateStr] || 0;
-    }
-    
-    return total;
   }
 }
