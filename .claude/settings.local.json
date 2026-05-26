@@ -38,7 +38,11 @@
       "Bash(curl -s http://localhost:8080/index.html)",
       "Bash(git fetch *)",
       "Bash(git stash *)",
-      "Bash(git pull *)"
+      "Bash(git pull *)",
+      "Bash(git diff *)",
+      "Bash(ssh -T git@github-7abian)",
+      "Bash(git check-ignore *)",
+      "Bash(git submodule *)"
     ],
     "additionalDirectories": [
       "c:\\Users\\MRNOKK\\Desktop\\7abian.githubio\\tools",
