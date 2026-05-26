@@ -1,3 +1,19 @@
+(async () => {
+  const namespace = 'mrnokk-blog';
+  const path = window.location.pathname.split('/').pop() || 'index.html';
+  const today = new Date().toISOString().split('T')[0];
+  
+  try {
+    await Promise.all([
+      fetch(`https://api.countapi.xyz/hit/${namespace}/total`),
+      fetch(`https://api.countapi.xyz/hit/${namespace}/day-${today}`),
+      fetch(`https://api.countapi.xyz/hit/${namespace}/${path}`)
+    ]);
+  } catch (e) {
+    console.warn('Failed to record visit:', e);
+  }
+})();
+
 // 动态计算阅读时间
 const postInfo = document.querySelector('.post-info');
 if (postInfo) {

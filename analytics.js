@@ -1,58 +1,136 @@
 class Analytics {
   constructor() {
     this.stats = null;
+    this.namespace = 'mrnokk-blog';
   }
 
   async init() {
+    await this.loadRealTimeStats();
+    this.renderStats();
+  }
+
+  async loadRealTimeStats() {
+    try {
+      const [totalResp, todayResp, articlesResp] = await Promise.all([
+        fetch(`https://api.countapi.xyz/get/${this.namespace}/total`),
+        this.getTodayCount(),
+        this.fetchArticlesStats()
+      ]);
+      
+      const total = totalResp.ok ? parseInt((await totalResp.json()).value) || 0 : 0;
+      const today = todayResp;
+      const weekly = await this.getWeeklyStats();
+      
+      this.stats = {
+        total,
+        today,
+        weekly,
+        articles: articlesResp || {},
+        daily: await this.fetchDailyStats()
+      };
+    } catch (e) {
+      console.warn('Failed to load real-time analytics:', e);
+      await this.fallbackToLocal();
+    }
+  }
+
+  async getTodayCount() {
+    const today = new Date().toISOString().split('T')[0];
+    const resp = await fetch(`https://api.countapi.xyz/hit/${this.namespace}/day-${today}`);
+    if (resp.ok) {
+      return parseInt((await resp.json()).value) || 0;
+    }
+    return 0;
+  }
+
+  async getWeeklyStats() {
+    let total = 0;
+    for (let i = 0; i < 7; i++) {
+      const date = new Date();
+      date.setDate(date.getDate() - i);
+      const dateStr = date.toISOString().split('T')[0];
+      const resp = await fetch(`https://api.countapi.xyz/get/${this.namespace}/day-${dateStr}`);
+      if (resp.ok) {
+        total += parseInt((await resp.json()).value) || 0;
+      }
+    }
+    return total;
+  }
+
+  async fetchDailyStats() {
+    const daily = {};
+    for (let i = 13; i >= 0; i--) {
+      const date = new Date();
+      date.setDate(date.getDate() - i);
+      const dateStr = date.toISOString().split('T')[0];
+      const resp = await fetch(`https://api.countapi.xyz/get/${this.namespace}/day-${dateStr}`);
+      if (resp.ok) {
+        daily[dateStr] = parseInt((await resp.json()).value) || 0;
+      } else {
+        daily[dateStr] = 0;
+      }
+    }
+    return daily;
+  }
+
+  async fetchArticlesStats() {
+    const articles = {};
+    const articleList = [
+      'post-1.html', 'post-2.html', 'post-3.html', 'post-4.html', 'post-5.html',
+      'post-1778299395193.html', 'post-1778991110662.html', 
+      'post-1779587180030.html', 'post-1779670042468.html'
+    ];
+    
+    for (const article of articleList) {
+      const resp = await fetch(`https://api.countapi.xyz/get/${this.namespace}/${article}`);
+      if (resp.ok) {
+        articles[article] = parseInt((await resp.json()).value) || 0;
+      }
+    }
+    return articles;
+  }
+
+  async fallbackToLocal() {
     try {
       const resp = await fetch('stats.json?' + Date.now());
       if (resp.ok) {
         this.stats = await resp.json();
-        this.renderStats();
       }
     } catch (e) {
-      console.warn('Failed to load analytics:', e);
+      this.stats = { total: 0, today: 0, weekly: 0, articles: {}, daily: {} };
     }
   }
 
   async trackVisit() {
-    if (!this.stats) return;
-    
     const path = window.location.pathname.split('/').pop() || 'index.html';
     const today = new Date().toISOString().split('T')[0];
     
     try {
-      const token = sessionStorage.getItem('github_token');
-      if (!token) return;
-
-      const fileUrl = 'https://api.github.com/repos/7abian/7abian.github.io/contents/stats.json';
-      const resp = await fetch(fileUrl, { headers: { 'Authorization': 'token ' + token } });
-      if (!resp.ok) return;
+      await Promise.all([
+        fetch(`https://api.countapi.xyz/hit/${this.namespace}/total`),
+        fetch(`https://api.countapi.xyz/hit/${this.namespace}/day-${today}`),
+        fetch(`https://api.countapi.xyz/hit/${this.namespace}/${path}`)
+      ]);
       
-      const data = await resp.json();
-      let stats = JSON.parse(decodeURIComponent(escape(atob(data.content))));
-      
-      stats.total = (stats.total || 0) + 1;
-      stats.today = (stats.today || 0) + 1;
-      stats.daily[today] = (stats.daily[today] || 0) + 1;
-      stats.articles[path] = (stats.articles[path] || 0) + 1;
-      stats.updated = new Date().toISOString();
-      
-      await fetch(fileUrl, {
-        method: 'PUT',
-        headers: { 'Authorization': 'token ' + token, 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          message: 'Update stats: ' + today,
-          content: btoa(unescape(encodeURIComponent(JSON.stringify(stats, null, 2)))),
-          sha: data.sha,
-          branch: 'main'
-        })
-      });
-      
-      this.stats = stats;
-      this.renderStats();
+      await this.loadRealTimeStats();
     } catch (e) {
       console.warn('Failed to track visit:', e);
+    }
+  }
+
+  static async recordVisit() {
+    const namespace = 'mrnokk-blog';
+    const path = window.location.pathname.split('/').pop() || 'index.html';
+    const today = new Date().toISOString().split('T')[0];
+    
+    try {
+      await Promise.all([
+        fetch(`https://api.countapi.xyz/hit/${namespace}/total`),
+        fetch(`https://api.countapi.xyz/hit/${namespace}/day-${today}`),
+        fetch(`https://api.countapi.xyz/hit/${namespace}/${path}`)
+      ]);
+    } catch (e) {
+      console.warn('Failed to record visit:', e);
     }
   }
 
