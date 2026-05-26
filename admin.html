@@ -29,6 +29,17 @@ h1{font-size:2rem;margin-bottom:2rem;text-align:center}
 .header-left{display:flex;align-items:center;gap:0.75rem;flex-wrap:wrap;flex-shrink:0}
 .grid{display:grid;grid-template-columns:1fr 1fr;gap:2rem}
 @media (max-width:968px){.grid{grid-template-columns:1fr}}
+.stats-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1rem;margin-bottom:1rem}
+.stat-item{text-align:center;padding:1rem;background:rgba(255,255,255,0.05);border-radius:10px}
+.stat-value{font-size:1.5rem;font-weight:700;color:var(--accent);font-family:monospace}
+.stat-label{font-size:0.75rem;color:var(--muted);margin-top:0.3rem}
+.stats-widget canvas{width:100%;height:auto;border-radius:8px;background:rgba(0,0,0,0.2)}
+.stats-section{background:var(--glass-bg);border:1px solid var(--glass-border);border-radius:16px;padding:2rem;margin-bottom:2rem}
+.articles-list{max-height:400px;overflow-y:auto;margin-top:1rem}
+.article-row{display:flex;justify-content:space-between;align-items:center;padding:0.75rem;border-bottom:1px solid rgba(255,255,255,0.08)}
+.article-row:hover{background:rgba(255,255,255,0.05)}
+.article-title{flex:1;margin-right:1rem;font-size:0.9rem}
+.article-views{color:var(--accent);font-family:monospace}
 </style>
 </head>
 <body>
@@ -50,6 +61,17 @@ h1{font-size:2rem;margin-bottom:2rem;text-align:center}
 </div>
 
 <div class="editor-section" id="editorSection">
+<div class="stats-section">
+<h2>📊 访问统计</h2>
+<div class="stats-grid">
+<div class="stat-item"><div class="stat-value" id="stats-total">--</div><div class="stat-label">总访问量</div></div>
+<div class="stat-item"><div class="stat-value" id="stats-today">--</div><div class="stat-label">今日访问</div></div>
+<div class="stat-item"><div class="stat-value" id="stats-week">--</div><div class="stat-label">本周访问</div></div>
+</div>
+<canvas id="stats-chart" width="600" height="200"></canvas>
+<h3 style="margin-top:1.5rem;margin-bottom:1rem">📄 文章阅读量排行</h3>
+<div class="articles-list" id="articles-list"></div>
+</div>
 <div style="background:var(--glass-bg);border:1px solid var(--glass-border);border-radius:12px;padding:1.5rem;margin-bottom:2rem">
 <h3 style="margin-bottom:1rem">编辑已有文章</h3>
 <div class="header-left">
@@ -92,6 +114,7 @@ h1{font-size:2rem;margin-bottom:2rem;text-align:center}
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+<script src="analytics.js"></script>
 <script>
 const GITHUB_OWNER='7abian';
 const GITHUB_REPO='7abian.github.io';
@@ -109,6 +132,7 @@ document.getElementById('editFileName').value=editFile;
 document.getElementById('authSection').classList.add('hidden');
 document.getElementById('editorSection').classList.add('active');
 loadArticle();
+loadAnalytics();
 }
 };
 
@@ -119,6 +143,12 @@ sessionStorage.setItem('github_token',token);
 document.getElementById('authSection').classList.add('hidden');
 document.getElementById('editorSection').classList.add('active');
 showStatus('Token 已保存','success');
+loadAnalytics();
+}
+
+function loadAnalytics(){
+window.analytics = new Analytics();
+window.analytics.init();
 }
 
 function previewPost(){

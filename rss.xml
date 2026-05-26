@@ -5,8 +5,24 @@
   <link>https://7abian.github.io</link>
   <description>记录学习、生活与思考的点滴 — 关于代码、安全与日常。网络安全爱好者、全栈开发者、终身学习者。</description>
   <language>zh-CN</language>
-  <lastBuildDate>Sat, 17 May 2026 00:00:00 +0800</lastBuildDate>
+  <lastBuildDate>Sun, 25 May 2026 00:00:00 +0800</lastBuildDate>
   <atom:link href="https://7abian.github.io/rss.xml" rel="self" type="application/rss+xml"/>
+
+  <item>
+    <title>惊蛰无声：隐蔽战线的时代警示与战略应对——基于电影〈惊蛰无声〉的深度分析</title>
+    <link>https://7abian.github.io/post-1779670042468.html</link>
+    <pubDate>Sun, 25 May 2026 00:00:00 +0800</pubDate>
+    <description>由国家安全部全程指导创作的首部当代国安题材电影《惊蛰无声》，以我国最新战机核心技术情报泄露为叙事主线，生动呈现了隐蔽战线反间谍斗争的严峻态势。</description>
+    <category>随笔</category>
+  </item>
+
+  <item>
+    <title>硬核科学遇上星际柔情：〈挽救计划〉的双重视角解读</title>
+    <link>https://7abian.github.io/post-1779587180030.html</link>
+    <pubDate>Sat, 24 May 2026 00:00:00 +0800</pubDate>
+    <description>《挽救计划》是一部将严谨科学精神与温暖人文内核精妙结合的"乐观硬科幻"杰作。它讲述了一个以严谨科学逻辑解谜、以真挚友谊拯救文明的宇宙传奇。</description>
+    <category>随笔</category>
+  </item>
 
   <item>
     <title>网安"黑魂"通关指南：从被虐到守护世界的108种姿势</title>

@@ -838,6 +838,41 @@ aside { display: flex; flex-direction: column; gap: 1.5rem; }
 .search-clear.visible { display: block; }
 .search-clear:hover { color: var(--text); }
 
+/* ── Stats widget ── */
+.stats-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 0.8rem;
+  margin-bottom: 1rem;
+}
+
+.stat-item {
+  text-align: center;
+  padding: 0.6rem;
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 10px;
+}
+
+.stat-value {
+  font-size: 1.35rem;
+  font-weight: 700;
+  color: var(--accent);
+  font-family: "JetBrains Mono", "Fira Code", monospace;
+}
+
+.stat-label {
+  font-size: 0.75rem;
+  color: var(--muted);
+  margin-top: 0.2rem;
+}
+
+.stats-widget canvas {
+  width: 100%;
+  height: auto;
+  border-radius: 8px;
+  background: rgba(0, 0, 0, 0.2);
+}
+
 /* ── Article card reading time ── */
 .post-reading-time {
   display: inline-flex; align-items: center; gap: 0.3rem; color: var(--muted);
