@@ -35,7 +35,10 @@
       "Bash(node tools/fix-nav.js)",
       "Bash(node tools/fix-publish.js)",
       "Bash(curl -s http://localhost:8080/styles.css)",
-      "Bash(curl -s http://localhost:8080/index.html)"
+      "Bash(curl -s http://localhost:8080/index.html)",
+      "Bash(git fetch *)",
+      "Bash(git stash *)",
+      "Bash(git pull *)"
     ],
     "additionalDirectories": [
       "c:\\Users\\MRNOKK\\Desktop\\7abian.githubio\\tools",
