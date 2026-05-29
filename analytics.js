@@ -1,11 +1,15 @@
 class Analytics {
   constructor() {
     this.stats = null;
+    this.titles = {};
     this.namespace = 'mrnokk-blog';
   }
 
   async init() {
-    await this.loadRealTimeStats();
+    await Promise.all([
+      this.fetchArticleTitles(),
+      this.loadRealTimeStats()
+    ]);
     this.renderStats();
   }
 
@@ -82,6 +86,23 @@ class Analytics {
     const results = await Promise.all(promises);
     results.forEach(r => { articles[r.article] = r.views; });
     return articles;
+  }
+
+  async fetchArticleTitles() {
+    try {
+      const resp = await fetch('index.html');
+      const html = await resp.text();
+      const parser = new DOMParser();
+      const doc = parser.parseFromString(html, 'text/html');
+      doc.querySelectorAll('article').forEach(article => {
+        const link = article.querySelector('a') || article;
+        const href = link.getAttribute('href');
+        const h2 = article.querySelector('h2');
+        if (href && h2) this.titles[href] = h2.textContent.trim();
+      });
+    } catch (e) {
+      console.warn('Failed to fetch article titles:', e);
+    }
   }
 
   calculateWeekly(daily) {
@@ -166,7 +187,7 @@ class Analytics {
     container.innerHTML = articles.map((article, index) => `
       <div class="article-row">
         <span style="margin-right:0.75rem;color:var(--muted)">${index + 1}.</span>
-        <span class="article-title">${article.file}</span>
+        <span class="article-title">${this.titles[article.file] || article.file}</span>
         <span class="article-views">${this.formatNumber(article.views)} 次</span>
       </div>
     `).join('');

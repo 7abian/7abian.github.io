@@ -2,13 +2,18 @@
   const namespace = 'mrnokk-blog';
   const path = window.location.pathname.split('/').pop() || 'index.html';
   const today = new Date().toISOString().split('T')[0];
-  
+
   try {
-    await Promise.all([
+    const [, , articleResp] = await Promise.all([
       fetch(`https://countapi.mileshilliard.com/api/v1/hit/${namespace}-total`),
       fetch(`https://countapi.mileshilliard.com/api/v1/hit/${namespace}-day-${today}`),
       fetch(`https://countapi.mileshilliard.com/api/v1/hit/${namespace}-${path}`)
     ]);
+    if (articleResp && articleResp.ok) {
+      const data = await articleResp.json();
+      const el = document.getElementById('article-views');
+      if (el && data.value) el.textContent = `阅读 ${data.value} 次`;
+    }
   } catch (e) {
     console.warn('Failed to record visit:', e);
   }
