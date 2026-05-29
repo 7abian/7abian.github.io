@@ -5,9 +5,9 @@
   
   try {
     await Promise.all([
-      fetch(`https://api.countapi.xyz/hit/${namespace}/total`),
-      fetch(`https://api.countapi.xyz/hit/${namespace}/day-${today}`),
-      fetch(`https://api.countapi.xyz/hit/${namespace}/${path}`)
+      fetch(`https://countapi.mileshilliard.com/api/v1/hit/${namespace}-total`),
+      fetch(`https://countapi.mileshilliard.com/api/v1/hit/${namespace}-day-${today}`),
+      fetch(`https://countapi.mileshilliard.com/api/v1/hit/${namespace}-${path}`)
     ]);
   } catch (e) {
     console.warn('Failed to record visit:', e);

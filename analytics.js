@@ -12,7 +12,7 @@ class Analytics {
   async loadRealTimeStats() {
     try {
       const results = await Promise.all([
-        fetch(`https://api.countapi.xyz/get/${this.namespace}/total`).then(r => r.json()).catch(() => ({ value: 0 })),
+        fetch(`https://countapi.mileshilliard.com/api/v1/get/${this.namespace}-total`).then(r => r.json()).catch(() => ({ value: 0 })),
         this.fetchTodayCount(),
         this.fetchArticlesStats(),
         this.fetchDailyStats()
@@ -34,7 +34,7 @@ class Analytics {
   async fetchTodayCount() {
     const today = new Date().toISOString().split('T')[0];
     try {
-      const resp = await fetch(`https://api.countapi.xyz/get/${this.namespace}/day-${today}`);
+      const resp = await fetch(`https://countapi.mileshilliard.com/api/v1/get/${this.namespace}-day-${today}`);
       const data = await resp.json();
       return parseInt(data.value) || 0;
     } catch {
@@ -52,7 +52,7 @@ class Analytics {
       const dateStr = date.toISOString().split('T')[0];
       
       promises.push(
-        fetch(`https://api.countapi.xyz/get/${this.namespace}/day-${dateStr}`)
+        fetch(`https://countapi.mileshilliard.com/api/v1/get/${this.namespace}-day-${dateStr}`)
           .then(r => r.json())
           .then(data => ({ date: dateStr, count: parseInt(data.value) || 0 }))
           .catch(() => ({ date: dateStr, count: 0 }))
@@ -73,7 +73,7 @@ class Analytics {
     ];
     
     const promises = articleList.map(article =>
-      fetch(`https://api.countapi.xyz/get/${this.namespace}/${article}`)
+      fetch(`https://countapi.mileshilliard.com/api/v1/get/${this.namespace}-${article}`)
         .then(r => r.json())
         .then(data => ({ article, views: parseInt(data.value) || 0 }))
         .catch(() => ({ article, views: 0 }))
@@ -101,9 +101,9 @@ class Analytics {
     
     try {
       await Promise.all([
-        fetch(`https://api.countapi.xyz/hit/${this.namespace}/total`),
-        fetch(`https://api.countapi.xyz/hit/${this.namespace}/day-${today}`),
-        fetch(`https://api.countapi.xyz/hit/${this.namespace}/${path}`)
+        fetch(`https://countapi.mileshilliard.com/api/v1/hit/${this.namespace}-total`),
+        fetch(`https://countapi.mileshilliard.com/api/v1/hit/${this.namespace}-day-${today}`),
+        fetch(`https://countapi.mileshilliard.com/api/v1/hit/${this.namespace}-${path}`)
       ]);
     } catch (e) {
       console.warn('Failed to track visit:', e);
@@ -117,9 +117,9 @@ class Analytics {
     
     try {
       await Promise.all([
-        fetch(`https://api.countapi.xyz/hit/${namespace}/total`),
-        fetch(`https://api.countapi.xyz/hit/${namespace}/day-${today}`),
-        fetch(`https://api.countapi.xyz/hit/${namespace}/${path}`)
+        fetch(`https://countapi.mileshilliard.com/api/v1/hit/${namespace}-total`),
+        fetch(`https://countapi.mileshilliard.com/api/v1/hit/${namespace}-day-${today}`),
+        fetch(`https://countapi.mileshilliard.com/api/v1/hit/${namespace}-${path}`)
       ]);
     } catch (e) {
       console.warn('Failed to record visit:', e);
