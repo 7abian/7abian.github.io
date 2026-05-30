@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="一个漏洞，一笔赏金：渗透萌新的合法搞钱实录 — MRNOKK's Blog 技术文章">
+<meta property="og:title" content="一个漏洞，一笔赏金：渗透萌新的合法搞钱实录 · MRNOKK's Blog">
+<meta property="og:description" content="一个漏洞，一笔赏金：渗透萌新的合法搞钱实录 — 阅读技术文章，分享成长。">
+<meta property="og:type" content="article">
+<link rel="icon" href="images/favicon.svg" type="image/svg+xml">
+<title>一个漏洞，一笔赏金：渗透萌新的合法搞钱实录 · MRNOKK's Blog</title>
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+<div class="progress-bar" id="progress" aria-hidden="true"></div>
+<div class="bg-wrap" aria-hidden="true">
+<div class="bg-orb orb-1"></div>
+<div class="bg-orb orb-2"></div>
+<div class="bg-orb orb-3"></div>
+</div>
+<header>
+<div class="nav-container">
+<div class="header-left">
+<a href="index.html" class="back-btn">← 返回首页</a>
+<div class="admin-only">
+<a href="admin.html?edit=post-1780184204273.html" class="back-btn">✏️ 编辑</a>
+<a href="#" onclick="deletePost('post-1780184204273.html');return false" class="back-btn">🗑️ 删除</a>
+</div>
+</div>
+<a href="index.html" class="logo">
+<img src="images/avatar02.jpg" alt="MRNOKK" class="avatar">
+<span>MRNOKK's Blog</span>
+</a>
+</div>
+</header>
+<div class="post-wrap">
+<div class="post-hero">
+<div class="post-tag">技术</div>
+<h1>一个漏洞，一笔赏金：渗透萌新的合法搞钱实录</h1>
+<div class="post-info">
+<span>2026-05-30</span>
+<span>阅读约 5 分钟</span>
+</div>
+</div>
+<div class="post-content">
+<p>这是一份写给零基础学习者、从渗透测试工程师视角出发的漏洞挖掘与变现指南。整篇文章将围绕“合法合规”和“专业成长”两条底线展开，带你从技能准备、实战挖洞到撰写报告，一步步拿到人生第一笔漏洞赏金。</p>
+<hr>
+<h1>从0到1：渗透测试工程师教你合法挖漏洞，赚到第一笔赏金</h1>
+<p>你好，我是一名网络安全工程师。几年前，我也和你一样，对着“漏洞”“赏金”“SRC”这些词既向往又迷茫。如今，我靠业余挖洞获得了可观的副业收入，也通过众测平台接到了不少项目。这条路只要方法得当，每一个踏实努力的人都能走通。</p>
+<p>今天这篇文章，我会以<strong>渗透测试工程师的职业视角</strong>，把“从零基础到挖到第一笔漏洞赏金”的全过程拆开揉碎讲给你。包含技能树、学习路线、挖洞思维、工具使用、报告撰写和平台选择，全程干货，不夹私货。</p>
+<hr>
+<h2>一、先打地基：渗透测试的底线与知识体系</h2>
+<h3>1.1 一条绝不能碰的红线</h3>
+<p><strong>只测试你拥有明确授权的系统。</strong><br>你可以测试的平台有：企业自家SRC（安全应急响应中心）、漏洞众测平台授权的项目、自己搭建的靶场、开源项目（遵循其漏洞披露政策）。未经授权擅自扫描他人网站不仅违法，也会彻底葬送你的职业生涯。</p>
+<h3>1.2 必备知识四件套</h3>
+<p>挖漏洞不是点点鼠标就能成的事，它需要扎实的根基。建议你按顺序打牢以下四块：</p>
+<ul>
+<li><strong>网络基础</strong>：TCP/IP协议栈、HTTP/HTTPS协议、请求响应头、Cookie/Session机制、同源策略等。  </li>
+<li><strong>Web基础</strong>：前端（HTML/JS了解即可）、后端语言（PHP/Java/Python任选其一读懂代码逻辑）、数据库（MySQL基本查询）、Web服务器（Apache/Nginx/IIS）。  </li>
+<li><strong>操作系统</strong>：熟练使用Linux命令行，会看日志、编辑文件、管理进程。Kali Linux是标准工作环境，把里面100+工具过一遍，不用全精通，但要知道每个是干什么的。  </li>
+<li><strong>编程能力</strong>：能写Python脚本即可。用于自动化扫描、数据解析、漏洞验证。不用多高超，能看懂、会改、会跑就行。</li>
+</ul>
+<h3>1.3 把OWASP Top 10当成你的启蒙老师</h3>
+<p>OWASP Top 10（2021版）是目前Web漏洞分类的黄金标准。初期你至少要对以下漏洞的原理、检测方法和利用手段烂熟于心：</p>
+<ul>
+<li>SQL注入、XSS、CSRF、SSRF、文件上传、越权（垂直/水平）、信息泄露、逻辑漏洞（支付、验证码、密码找回）、不安全的反序列化、组件漏洞等。</li>
+</ul>
+<p>这些漏洞背后都对应着真正的赏金，后面会细说。</p>
+<hr>
+<h2>二、搭建你的“训练场”：学习路径与靶场推荐</h2>
+<p>没有任何一个高手是直接在真实项目上练出来的。<strong>靶场就是你的健身房。</strong></p>
+<h3>2.1 入门级靶场</h3>
+<ul>
+<li><strong>DVWA（Damn Vulnerable Web Application）</strong>：经典中的经典，自带低中高难度，适合逐级攻关注入、XSS、文件包含等。</li>
+<li><strong>Pikachu漏洞练习平台</strong>：中文友好，漏洞类型较全，每个漏洞都有讲解，适合反复练习。</li>
+<li><strong>Upload-labs</strong>：专攻文件上传漏洞的靶场，从绕过前端验证到各种后缀名、内容类型绕过，全部通关后文件上传基本拿捏。</li>
+</ul>
+<h3>2.2 进阶级靶场</h3>
+<ul>
+<li><strong>PortSwigger Web Security Academy</strong>：Burp Suite官方出品，完全免费，包含200+实验，覆盖从SQL注入到OAuth攻击等现代Web漏洞，每一个实验都代表真实场景。</li>
+<li><strong>PentesterLab</strong>：部分免费，有大量真实应用漏洞的演练，还会教你看代码、分析逻辑，非常适合进阶。</li>
+<li><strong>VulnHub / HackTheBox</strong>：下载虚拟机或在线打靶，贴近真实内网渗透，等你有了Web基础后可以提升内外网综合能力。</li>
+</ul>
+<p>建议训练顺序：DVWA → Pikachu → Upload-labs → PortSwigger Academy → HTB。在靶场上每成功利用一个漏洞，就尝试用不同方法再复现一次，并记录下完整的思路和截图，这习惯以后写报告时能让你事半功倍。</p>
+<hr>
+<h2>三、认识战场：挖漏洞平台与变现模式</h2>
+<p>训练到位了，我们开始考虑“在哪里挖”和“怎么赚钱”。</p>
+<h3>3.1 国内主流平台</h3>
+<ul>
+<li><strong>补天漏洞响应平台（奇安信）</strong>：公益SRC和企业SRC都有，新人建议从公益SRC开始。公益项目给积分、证书和少量物资奖励，但更重要的是帮你积累漏洞数量和信誉。企业SRC则有现金奖励，单个漏洞几百到上万不等。</li>
+<li><strong>漏洞盒子（FreeBuf）</strong>：提供大量众测项目，即企业授权测试人员对指定系统测试。奖金按漏洞等级分配，还有私密项目可申请，赏金丰厚。</li>
+<li><strong>阿里SRC、腾讯SRC、百度SRC等大厂自建SRC</strong>：奖金高、单个严重漏洞可达数万，但竞争极为激烈，初期可以观望了解规则，等技术成熟了再入场。</li>
+<li><strong>CNVD / CNNVD</strong>：国家漏洞库，提交原创漏洞可获得证书或奖励，偏荣誉向，有些单位会给物质奖励。</li>
+</ul>
+<h3>3.2 国际平台</h3>
+<ul>
+<li><strong>HackerOne</strong>：全球最大漏洞众测平台，无数大厂都在上面，赏金以美元计，竞争同样激烈，需要英文报告能力。</li>
+<li><strong>Bugcrowd</strong>：另一大国际平台，机制类似。
+对于初学者，我的建议是<strong>先在补天公益SRC或漏洞盒子的公开项目练手</strong>。既能面对真实系统，又不会因漏洞等级太低被打击积极性，等有了10个以上有效漏洞和一定信誉分后再转战企业SRC或私有项目。</li>
+</ul>
+<hr>
+<h2>四、挖洞方法论：从信息收集到漏洞验证的全流程</h2>
+<p>这是本文最核心的部分。我将按照渗透测试的标准流程，告诉你从打开一个目标到提交漏洞总共要做什么。</p>
+<h3>4.1 信息收集：决定你80%的成果</h3>
+<p>挖洞不是上来就对着登录框一通注入。优秀的信息收集能让你发现别人忽略的攻击面。</p>
+<ul>
+<li><strong>子域名收集</strong>：使用OneForAll、Subfinder、Amass、在线DNSdumpster等工具，尽可能穷举出目标所有的子域名。很多边缘子域名承载着老系统、测试系统，漏洞多且疏于管理。</li>
+<li><strong>端口与服务扫描</strong>：Nmap -sV -sC 快速识别开放端口及服务。非Web端口（数据库、FTP、SSH、Redis、Zookeeper等）常出现未授权访问，是低危但能快速出洞的点。</li>
+<li><strong>目录与文件扫描</strong>：dirsearch、ffuf、gobuster等工具对Web目录进行暴力枚举，寻找后台地址、备份文件（.zip/.sql/.bak）、配置文件、Swagger-UI文档、phpinfo等敏感泄露。</li>
+<li><strong>识别技术栈</strong>：Wappalyzer插件可识别前端框架、服务器、编程语言；看JS文件寻找接口路径、隐藏参数；分析登录、注册、找回密码等功能涉及的数据包，记录参数。</li>
+</ul>
+<h3>4.2 自动化扫描与手动验证</h3>
+<p>很多人迷信自动化扫描器，觉得鼠标一点漏洞自来。实际上，自动化工具只能找出不到30%的漏洞，<strong>奖金高的逻辑漏洞几乎全靠手工</strong>。</p>
+<ul>
+<li><strong>适当使用扫描器作为辅助</strong>：在获得授权的前提下，可以挂Awvs、Nessus或使用Burp Scanner做被动扫描，但<strong>不要完全依赖其结果</strong>。扫描出的中高危绝大多数需要手工验证真伪。</li>
+<li><strong>Burp Suite是核心工作台</strong>：<ul>
+<li>设置好代理，浏览目标功能时观察HTTP历史；</li>
+<li>看到参数就忍不住去改动一下——ID、userid、role、price、filepath等；</li>
+<li>Repeater用于单次请求的修改重放，Intruder用于批量fuzz参数（如遍历ID、爆破目录等）。</li>
+</ul>
+</li>
+</ul>
+<h3>4.3 集中精力攻击这五类“钱景”漏洞</h3>
+<p>根据国内SRC赏金数据统计，这几类漏洞出镜率高、赏金可观：</p>
+<p><strong>① 越权漏洞（IDOR）</strong><br>这是新手的金矿。当你看到请求中有<code>/user/info?id=123</code>或<code>/api/order/10086</code>，试着把ID改成其他人的数字。如果返回了他人数据，这就是水平越权，一般在中危以上。再用普通用户token去访问管理员接口，若成功则是垂直越权，高危起步。<br><strong>推荐插件</strong>：Burp的Autorize，自动帮你用低权限Cookie重放高权限请求，并对比响应，效率极高。</p>
+<p><strong>② 逻辑漏洞</strong><br>支付、优惠券、签到、投票、验证码等流程最容易出现逻辑瑕疵。例如：</p>
+<ul>
+<li>修改支付请求中的金额参数（amount）为0.01元；</li>
+<li>在购物车数量处填写负数，看总额是否减少；</li>
+<li>并发请求优惠券领取接口（用Burp Intruder发多个并发线程），可能突破“每人限领一张”限制；</li>
+<li>找回密码的验证码暴力破解或跳过验证步骤，直接修改响应包状态码。</li>
+</ul>
+<p><strong>③ 信息泄露</strong><br>API文档（如Swagger）、源码泄露（.git/.svn）、配置信息、内部IP、员工账号密码表等。这类漏洞经常被标注为中低危，但提交数量多了赏金也很可观，且竞争相对小。</p>
+<p><strong>④ 存储型XSS</strong><br>反射型XSS现在普遍不收或评级低，但存储型XSS（如留言板、个人资料、站内信）能打到后台管理员Cookie，属于高危。你需要关注：输入点是否过滤特殊字符，能否闭合标签，是否可用<code>&lt;img src=x onerror=alert(1)&gt;</code>等。</p>
+<p><strong>⑤ 文件上传与SSRF</strong><br>文件上传能获取Webshell通常直接定级严重；SSRF能探测内网、读取云元数据也是高危。两者对技术要求偏高，适合中期攻克。</p>
+<h3>4.4 真实漏洞挖掘案例重现</h3>
+<p>以一次某SRC众测中的真实发现为例：</p>
+<ol>
+<li>信息收集发现一个<code>api.target.com</code>子域名，开放了8080端口，上面跑着Spring Boot Actuator，直接访问<code>/env</code>可看到数据库密码和云服务AK。</li>
+<li>这属于信息泄露高危。进一步利用泄露的AK登录OSS，发现大量用户上传身份证照片。</li>
+<li>从发现到提交漏洞报告，全程不到2小时，最终奖金5000元。</li>
+</ol>
+<p>可以看到，很多时候不需要高超的利用技巧，只需细心和敏感度。</p>
+<hr>
+<h2>五、专业漏洞报告：让你的成果变成赏金</h2>
+<p>很多人挖到漏洞却因为报告太糟糕被忽略或降级。记住：<strong>漏洞报告是证明你专业度的唯一材料。</strong></p>
+<p>一份合格的报告应包括：</p>
+<ul>
+<li><strong>标题</strong>：简洁说明系统+漏洞类型，如“XX网某接口存在水平越权可查看所有用户订单”。</li>
+<li><strong>漏洞危害描述</strong>：说明该漏洞可导致的最严重后果（获取敏感信息、控制服务器、资金损失等），用业务语言讲，不要只写技术术语。</li>
+<li><strong>复现步骤</strong>：从初始访问URL开始，每一步操作配上截图，标注请求参数，关键payload用红框突出。确保审核人员按照你的步骤100%能复现。</li>
+<li><strong>修复建议</strong>：至少给出1条可落地的方案，比如对ID参数做权限校验、使用参数化查询等。</li>
+<li><strong>自评等级</strong>：根据平台危害指引自评（如严重/高危/中危/低危），并说明理由。</li>
+</ul>
+<p>举例：</p>
+<blockquote>
+<p><strong>步骤3</strong>：使用普通账户test登录，访问订单详情抓包，请求为 <code>GET /api/order/detail?order_id=210312</code><br><strong>步骤4</strong>：将order_id修改为210313（非本人订单），重放请求，成功返回他人订单详情，包含收货地址、电话。<br>已附全流程截图。建议后端校验当前Session用户与订单所属权。</p>
+</blockquote>
+<p>专业、严谨的报告会让审核人员对你产生信任，认可度高了，后续挖到边缘漏洞也可能被酌情采纳。</p>
+<hr>
+<h2>六、从第一笔赏金到稳定收入：起步策略与心态</h2>
+<p><strong>策略一：先求数量，再追质量</strong><br>初期你的技术可能达不到挖高危，那就从信息泄露、反射型XSS（有的平台收）、轻微逻辑漏洞入手。目的不是单个赏金多高，而是积累信誉等级和通过率。信誉分提高后，能解锁更多高奖金项目，甚至收到平台邀请。</p>
+<p><strong>策略二：多参与众测和节日活动</strong><br>漏洞盒子、补天每逢节假日常有众测活动，奖金系数上浮，还有新人奖励计划。关注公告，提前入场。</p>
+<p><strong>策略三：走“通用漏洞”路线</strong><br>如果觉得单一站点挖不到，可以研究某些CMS、框架、插件的通用漏洞，提交到CNVD或补天的通用漏洞，一个漏洞可能影响数万网站，奖金和证书含金量都很高。</p>
+<p><strong>心态建设</strong>：</p>
+<ul>
+<li>挖洞是持久战。你可能连续一周颗粒无收，调整好心态，该学习靶场就回去充电。</li>
+<li>做好笔记。我用Typora或Notion记录每一次测试的目标、路径、发现、失败原因，定期回顾会形成宝贵的经验库。</li>
+<li>遵守规则。不要用漏洞测试阶段拖垮服务器，不要窃取、篡改、下载超出验证需要的数据，否则轻则封号，重则追责。</li>
+<li>少即是多。专注一个方向先突破，比如先吃透越权，然后再拓展SSRF，忌四处撒网。</li>
+</ul>
+<hr>
+<h2>七、结语</h2>
+<p>从零基础到拿到第一笔漏洞赏金，并不是一道遥不可及的门槛。它需要你沉下心夯实基础，在靶场里反复试错，在合法测试中小心翼翼地把理论变成战果，最后用无可挑剔的报告把成果变现。</p>
+<p>当你收到平台短信“您的漏洞已审核通过，赏金XX元”时，那种兴奋和成就感，会让你觉得一切努力都值得。更重要的是，你开始真正以渗透测试工程师的视角审视每一个系统，这种思维将成为你人生中真正值钱的资产。</p>
+<p>愿你早日挖到属于自己的第一笔赏金，并在这条路上走得又远又稳。</p>
+<p><strong>坚守底线，技术向善。</strong></p>
+
+</div>
+<nav class="post-nav" aria-label="文章导航">
+<div class="placeholder"></div>
+<a href="post-1779670042468.html" class="next-link">
+  <span class="nav-label">下一篇 →</span>
+  <span class="nav-title">惊蛰无声：隐蔽战线的时代警示与战略应对——基于电影〈惊蛰无声〉的深度分析</span>
+  </a>
+</nav>
+<div id="comment-section" data-blog-comments data-page-path="post-1780184204273"></div>
+</div>
+<footer>
+<p>&copy; 2026 MRNOKK's Blog. 用心记录，分享成长。</p>
+</footer>
+<script src="comments.js"></script>
+<script src="utils.js"></script>
+</body>
+</html>
