@@ -58,7 +58,8 @@
       "Bash(curl -s --connect-timeout 10 \"https://countapi.mileshilliard.com/health\")",
       "Bash(nslookup api.countapi.xyz)",
       "WebFetch(domain:countapi.mileshilliard.com)",
-      "WebFetch(domain:dev.to)"
+      "WebFetch(domain:dev.to)",
+      "Bash(xxd)"
     ],
     "additionalDirectories": [
       "c:\\Users\\MRNOKK\\Desktop\\7abian.githubio\\tools",

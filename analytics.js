@@ -6,10 +6,9 @@ class Analytics {
   }
 
   async init() {
-    await Promise.all([
-      this.fetchArticleTitles(),
-      this.loadRealTimeStats()
-    ]);
+    // fetchArticleTitles() must complete first — fetchArticlesStats() depends on this.titles
+    await this.fetchArticleTitles();
+    await this.loadRealTimeStats();
     this.renderStats();
   }
 
@@ -70,19 +69,18 @@ class Analytics {
 
   async fetchArticlesStats() {
     const articles = {};
-    const articleList = [
-      'post-1.html', 'post-2.html', 'post-3.html', 'post-4.html', 'post-5.html',
-      'post-1778299395193.html', 'post-1778991110662.html', 
-      'post-1779587180030.html', 'post-1779670042468.html'
-    ];
-    
+    // Dynamically discover articles from index.html (populated by fetchArticleTitles)
+    const articleList = Object.keys(this.titles);
+
+    if (!articleList.length) return articles;
+
     const promises = articleList.map(article =>
       fetch(`https://countapi.mileshilliard.com/api/v1/get/${this.namespace}-${article}`)
         .then(r => r.json())
         .then(data => ({ article, views: parseInt(data.value) || 0 }))
         .catch(() => ({ article, views: 0 }))
     );
-    
+
     const results = await Promise.all(promises);
     results.forEach(r => { articles[r.article] = r.views; });
     return articles;
