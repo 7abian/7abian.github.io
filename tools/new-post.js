@@ -20,6 +20,11 @@ const template = `<!DOCTYPE html>
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="${title} — MRNOKK's Blog ${tag}文章">
+<meta property="og:title" content="${title} · MRNOKK's Blog">
+<meta property="og:description" content="${title} — 阅读${tag}文章，分享成长。">
+<meta property="og:type" content="article">
+<link rel="icon" href="images/favicon.svg" type="image/svg+xml">
 <title>${title} · MRNOKK's Blog</title>
 <link rel="stylesheet" href="styles.css">
 </head>
@@ -56,6 +61,7 @@ const template = `<!DOCTYPE html>
     <div class="post-info">
       <span>${date}</span>
       <span>阅读约 5 分钟</span>
+      <span id="article-views">阅读 -- 次</span>
     </div>
   </div>
 

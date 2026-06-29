@@ -5,8 +5,16 @@
   <link>https://7abian.github.io</link>
   <description>记录学习、生活与思考的点滴 — 关于代码、安全与日常。网络安全爱好者、全栈开发者、终身学习者。</description>
   <language>zh-CN</language>
-  <lastBuildDate>Sun, 25 May 2026 00:00:00 +0800</lastBuildDate>
+  <lastBuildDate>Sat, 30 May 2026 00:00:00 +0800</lastBuildDate>
   <atom:link href="https://7abian.github.io/rss.xml" rel="self" type="application/rss+xml"/>
+
+  <item>
+    <title>一个漏洞，一笔赏金：渗透萌新的合法搞钱实录</title>
+    <link>https://7abian.github.io/post-1780184204273.html</link>
+    <pubDate>Sat, 30 May 2026 00:00:00 +0800</pubDate>
+    <description>一份写给零基础学习者、从渗透测试工程师视角出发的漏洞挖掘与变现指南。从技能准备、实战挖洞到撰写报告，一步步拿到人生第一笔漏洞赏金。</description>
+    <category>技术</category>
+  </item>
 
   <item>
     <title>惊蛰无声：隐蔽战线的时代警示与战略应对——基于电影〈惊蛰无声〉的深度分析</title>

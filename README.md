@@ -8,8 +8,8 @@
 - 🔍 实时搜索与标签过滤
 - 📊 阅读进度条
 - 📋 代码一键复制
-- 💬 评论系统（Giscus）
-- 📈 访问统计（Google Analytics）
+- 💬 评论系统（Supabase 自建评论）
+- 📈 访问统计（CountAPI 实时统计）
 
 ## 本地预览
 
@@ -34,8 +34,8 @@ node tools/new-post.js "文章标题" "标签"
 ## 技术栈
 
 - 纯 HTML/CSS/JavaScript
-- Giscus（评论）
-- Google Analytics（统计）
+- Supabase（评论系统）
+- CountAPI（访问统计）
 
 ## License
 
