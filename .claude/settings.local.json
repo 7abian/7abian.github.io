@@ -59,7 +59,14 @@
       "Bash(nslookup api.countapi.xyz)",
       "WebFetch(domain:countapi.mileshilliard.com)",
       "WebFetch(domain:dev.to)",
-      "Bash(xxd)"
+      "Bash(xxd)",
+      "Bash(curl -s -o /dev/null -w \"%{http_code}\" \"https://7abian.github.io/admin.html\")",
+      "Bash(curl -s -I \"https://cdn.jsdelivr.net/npm/marked/marked.min.js\")",
+      "Bash(curl -s \"https://7abian.github.io/admin.html\")",
+      "Bash(curl -s -I \"https://7abian.github.io/admin.html\")",
+      "Bash(curl -s -o /dev/null -w \"%{http_code}\" \"https://7abian.github.io/analytics.js\")",
+      "Bash(curl -s \"https://7abian.github.io/post-1780184204273.html\")",
+      "Bash(curl -s \"https://7abian.github.io/post-1779670042468.html\")"
     ],
     "additionalDirectories": [
       "c:\\Users\\MRNOKK\\Desktop\\7abian.githubio\\tools",
