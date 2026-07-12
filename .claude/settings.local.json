@@ -66,7 +66,8 @@
       "Bash(curl -s -I \"https://7abian.github.io/admin.html\")",
       "Bash(curl -s -o /dev/null -w \"%{http_code}\" \"https://7abian.github.io/analytics.js\")",
       "Bash(curl -s \"https://7abian.github.io/post-1780184204273.html\")",
-      "Bash(curl -s \"https://7abian.github.io/post-1779670042468.html\")"
+      "Bash(curl -s \"https://7abian.github.io/post-1779670042468.html\")",
+      "Bash(curl -s \"https://voumtuvtbrkbdmkqfmzy.supabase.co/rest/v1/comments?select=id,nickname,content,created_at,parent_id&page_path=eq.test&status=eq.approved&order=created_at.desc\" -H \"apikey: sb_publishable_KO5mI0KB4Ou5uvuTDAjk0A_eU63pJYu\" -H \"Authorization: Bearer sb_publishable_KO5mI0KB4Ou5uvuTDAjk0A_eU63pJYu\")"
     ],
     "additionalDirectories": [
       "c:\\Users\\MRNOKK\\Desktop\\7abian.githubio\\tools",
