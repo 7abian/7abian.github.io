@@ -147,14 +147,31 @@ loadAnalytics();
 }
 
 function loadAnalytics(){
+try{
+if(typeof Analytics==='undefined'){
+console.warn('[loadAnalytics] Analytics 类未定义，analytics.js 可能未加载');
+return;
+}
 window.analytics = new Analytics();
 window.analytics.init();
+}catch(e){
+console.warn('[loadAnalytics] 初始化失败:',e.message);
+}
 }
 
 function previewPost(){
+try{
 const content=document.getElementById('postContent').value;
+if(typeof marked==='undefined'){
+showStatus('Markdown 渲染库加载失败，请检查网络连接后刷新页面','error');
+return;
+}
 const html=marked.parse(content);
 document.getElementById('preview').innerHTML=html;
+}catch(e){
+console.error('[previewPost] 错误:',e);
+showStatus('预览失败: '+e.message,'error');
+}
 }
 
 async function loadArticle(){
@@ -195,51 +212,72 @@ return html.replace(/<h2>(.*?)<\/h2>/g,'## $1\n')
 }
 
 async function publishPost(){
+const btn=document.getElementById('publishBtn');
+const editFileName=document.getElementById('editFileName').value.trim();
+const isEdit=!!editFileName;
+
+try{
 const title=document.getElementById('postTitle').value.trim();
 const tag=document.getElementById('postTag').value;
 const content=document.getElementById('postContent').value.trim();
 if(!title||!content){showStatus('请填写标题和内容','error');return}
 
-const btn=document.getElementById('publishBtn');
 btn.disabled=true;
-const editFileName=document.getElementById('editFileName').value.trim();
-const isEdit=!!editFileName;
 btn.textContent=isEdit?'更新中...':'发布中...';
 
-try{
+console.log('[publishPost] 开始, isEdit:',isEdit,'title:',title);
 const token=sessionStorage.getItem('github_token');
+if(!token){throw new Error('未找到 GitHub Token，请刷新页面重新认证')}
+console.log('[publishPost] token 已获取');
+
 const fileName=isEdit?editFileName:`post-${Date.now()}.html`;
+console.log('[publishPost] 文件名:',fileName);
 let nextPostFile=null,nextPostTitle=null,sha=null,existingNav=null;
 if(!isEdit){
 const idxUrl=`https://api.github.com/repos/${GITHUB_OWNER}/${GITHUB_REPO}/contents/index.html`;
+console.log('[publishPost] 获取 index.html...');
 const idxResp=await fetch(idxUrl,{headers:{'Authorization':`token ${token}`}});
-if(idxResp.ok){
+if(!idxResp.ok){throw new Error(`获取首页失败: HTTP ${idxResp.status} — 请检查 Token 是否包含 repo 权限`)}
 const idxData=await idxResp.json();
 const idxHTML=decodeURIComponent(escape(atob(idxData.content)));
 const firstMatch=idxHTML.match(/<article onclick="location\.href='([^']+)'">[\s\S]*?<h2>(.*?)<\/h2>/);
 if(firstMatch){nextPostFile=firstMatch[1];nextPostTitle=firstMatch[2];}
-}
+console.log('[publishPost] 下一篇文章:',nextPostFile||'无(这是第一篇文章)');
 } else {
 const url=`https://api.github.com/repos/${GITHUB_OWNER}/${GITHUB_REPO}/contents/${fileName}`;
+console.log('[publishPost] 获取已有文章...');
 const resp=await fetch(url,{headers:{'Authorization':`token ${token}`}});
-if(resp.ok){const data=await resp.json();sha=data.sha;
+if(!resp.ok){throw new Error(`获取文章失败: HTTP ${resp.status}`)}
+const data=await resp.json();sha=data.sha;
 const postHTML=decodeURIComponent(escape(atob(data.content)));
 const navMatch=postHTML.match(/<nav class="post-nav"[^>]*>([\s\S]*?)<\/nav>/);
-if(navMatch)existingNav=navMatch[0];
+if(navMatch)existingNav=navMatch[1];
 }
-}
+
+console.log('[publishPost] 生成 HTML...');
 const html=generatePostHTML(title,tag,content,fileName,nextPostFile,nextPostTitle,existingNav);
+
+console.log('[publishPost] 提交文件到 GitHub...');
 await commitFile(fileName,html,isEdit?`Update post: ${title}`:`Add new post: ${title}`,sha);
+console.log('[publishPost] 文件已提交');
+
 if(!isEdit){
+console.log('[publishPost] 更新首页...');
 await updateIndexPage(fileName,title,tag,content);
-if(nextPostFile)await updatePostPrevNav(nextPostFile,fileName,title);
+console.log('[publishPost] 首页已更新');
+if(nextPostFile){
+console.log('[publishPost] 更新前一篇文章导航...');
+await updatePostPrevNav(nextPostFile,fileName,title);
+}
 }
 showStatus(isEdit?'文章更新成功！':'文章发布成功！首页已自动更新','success');
 document.getElementById('postTitle').value='';
 document.getElementById('postContent').value='';
 document.getElementById('editFileName').value='';
 document.getElementById('preview').innerHTML='<p style="color:var(--muted)">预览区域</p>';
+console.log('[publishPost] ✅ 发布完成!');
 }catch(error){
+console.error('[publishPost] ❌ 错误:',error.message,error);
 showStatus((isEdit?'更新':'发布')+'失败: '+error.message,'error');
 }finally{
 btn.disabled=false;
@@ -251,9 +289,7 @@ function generatePostHTML(title,tag,mdContent,fileName,nextPostFile,nextPostTitl
 const htmlContent=marked.parse(mdContent);
 const date=new Date().toISOString().split('T')[0];
   const pagePath = fileName.replace('.html', '');
-  const prevLink = nextPostFile
-  ? `<div class="placeholder"></div>`
-  : `<div class="placeholder"></div>`;
+  const prevLink = `<div class="placeholder"></div>`;
   const nextLink = nextPostFile
   ? `<a href="${nextPostFile}" class="next-link">
   <span class="nav-label">下一篇 →</span>
