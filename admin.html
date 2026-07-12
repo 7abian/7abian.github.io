@@ -278,7 +278,9 @@ document.getElementById('preview').innerHTML='<p style="color:var(--muted)">预�
 console.log('[publishPost] ✅ 发布完成!');
 }catch(error){
 console.error('[publishPost] ❌ 错误:',error.message,error);
-showStatus((isEdit?'更新':'发布')+'失败: '+error.message,'error');
+const errMsg=(isEdit?'更新':'发布')+'失败: '+error.message;
+showStatus(errMsg,'error');
+alert(errMsg+'\n\n请打开浏览器控制台 (F12) 查看详细日志');
 }finally{
 btn.disabled=false;
 btn.textContent='发布文章';
