@@ -1,0 +1,10 @@
+services:
+  - type: web
+    name: encrypted-chat
+    runtime: node
+    rootDir: chat-server
+    buildCommand: npm install
+    startCommand: node --experimental-strip-types src/index.ts
+    envVars:
+      - key: PORT
+        value: 3000
