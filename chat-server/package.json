@@ -3,7 +3,7 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "start": "node --import tsx src/index.ts"
+    "start": "npx tsx src/index.ts"
   },
   "dependencies": {
     "ws": "^8.18.0",

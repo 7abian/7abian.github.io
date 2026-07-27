@@ -8,11 +8,13 @@
  */
 import { createServer, IncomingMessage, ServerResponse } from 'http'
 import { readFileSync, existsSync } from 'fs'
-import { join, extname } from 'path'
+import { join, extname, dirname } from 'path'
+import { fileURLToPath } from 'url'
 import { WebSocketServer, WebSocket } from 'ws'
 
 const PORT = parseInt(process.env.PORT || '3000', 10)
-const STATIC_DIR = join(import.meta.dirname, '..', 'dist')
+const __dirname = dirname(fileURLToPath(import.meta.url))
+const STATIC_DIR = join(__dirname, '..', 'dist')
 
 // MIME 类型映射
 const MIME: Record<string, string> = {
