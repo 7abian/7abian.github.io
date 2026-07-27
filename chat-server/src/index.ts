@@ -12,7 +12,7 @@ import { join, extname } from 'path'
 import { WebSocketServer, WebSocket } from 'ws'
 
 const PORT = parseInt(process.env.PORT || '3000', 10)
-const STATIC_DIR = join(import.meta.dirname, '..', '..', 'client', 'dist')
+const STATIC_DIR = join(import.meta.dirname, '..', 'dist')
 
 // MIME 类型映射
 const MIME: Record<string, string> = {
