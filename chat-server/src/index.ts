@@ -148,7 +148,7 @@ wss.on('connection', (ws: WebSocket) => {
 })
 
 // ====== 启动 ======
-server.listen(PORT, () => {
+server.listen(PORT, '0.0.0.0', () => {
   console.log(`\n🔐 加密通讯服务器启动`)
   console.log(`   HTTP + WebSocket: http://localhost:${PORT}`)
   console.log(`   WebSocket 路径:   ws://localhost:${PORT}/ws`)

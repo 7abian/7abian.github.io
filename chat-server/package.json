@@ -6,7 +6,7 @@
     "node": ">=20"
   },
   "scripts": {
-    "start": "npx tsx src/index.ts"
+    "start": "node --import ./node_modules/tsx/dist/esm/index.mjs src/index.ts"
   },
   "dependencies": {
     "ws": "^8.18.0",
