@@ -83,32 +83,39 @@ async function deletePost(fileName) {
   if (!confirm('确定要删除这篇文章吗？此操作不可恢复！')) return;
   try {
     const token = sessionStorage.getItem('github_token');
-    const fileUrl = 'https://api.github.com/repos/7abian/7abian.github.io/contents/' + fileName;
-    const resp = await fetch(fileUrl, { headers: { 'Authorization': 'token ' + token } });
-    if (!resp.ok) throw new Error('获取文件信息失败');
-    const data = await resp.json();
-    await fetch(fileUrl, {
-      method: 'DELETE',
-      headers: { 'Authorization': 'token ' + token, 'Content-Type': 'application/json' },
-      body: JSON.stringify({ message: 'Delete post: ' + fileName, sha: data.sha, branch: 'main' })
-    });
-    // 同步从 index.html 中删除对应文章卡片
+    // 1. 始终先清理 index.html 中的文章卡片（无论文件是否存在）
+    await removeFromIndex(fileName, token);
+    // 2. 尝试删除文章文件（如果还存在于 GitHub）
     try {
-      const indexUrl = 'https://api.github.com/repos/7abian/7abian.github.io/contents/index.html';
-      const indexResp = await fetch(indexUrl, { headers: { 'Authorization': 'token ' + token } });
-      if (indexResp.ok) {
-        const indexData = await indexResp.json();
-        let indexHTML = decodeURIComponent(escape(atob(indexData.content)));
-        const regex = new RegExp("<article[^>]*onclick=\"location\\\\.href='" + fileName + "'\"[^>]*>[\\s\\S]*?</article>\\s*", 'g');
-        indexHTML = indexHTML.replace(regex, '');
-        await fetch(indexUrl, {
-          method: 'PUT',
+      const fileUrl = 'https://api.github.com/repos/7abian/7abian.github.io/contents/' + fileName;
+      const resp = await fetch(fileUrl, { headers: { 'Authorization': 'token ' + token } });
+      if (resp.ok) {
+        const data = await resp.json();
+        await fetch(fileUrl, {
+          method: 'DELETE',
           headers: { 'Authorization': 'token ' + token, 'Content-Type': 'application/json' },
-          body: JSON.stringify({ message: 'Remove deleted post from index', content: btoa(unescape(encodeURIComponent(indexHTML))), sha: indexData.sha, branch: 'main' })
+          body: JSON.stringify({ message: 'Delete post: ' + fileName, sha: data.sha, branch: 'main' })
         });
       }
     } catch (e) {}
     alert('文章已删除');
     window.location.href = 'index.html';
   } catch (e) { alert('删除失败: ' + e.message); }
+}
+
+async function removeFromIndex(fileName, token) {
+  const indexUrl = 'https://api.github.com/repos/7abian/7abian.github.io/contents/index.html';
+  const indexResp = await fetch(indexUrl, { headers: { 'Authorization': 'token ' + token } });
+  if (!indexResp.ok) return;
+  const indexData = await indexResp.json();
+  let indexHTML = decodeURIComponent(escape(atob(indexData.content)));
+  const regex = new RegExp("<article[^>]*onclick=\"location\\\\.href='" + fileName + "'\"[^>]*>[\\s\\S]*?</article>\\s*", 'g');
+  if (!regex.test(indexHTML)) return; // 没有卡片则跳过
+  regex.lastIndex = 0; // reset after test()
+  indexHTML = indexHTML.replace(regex, '');
+  await fetch(indexUrl, {
+    method: 'PUT',
+    headers: { 'Authorization': 'token ' + token, 'Content-Type': 'application/json' },
+    body: JSON.stringify({ message: 'Remove post card from index: ' + fileName, content: btoa(unescape(encodeURIComponent(indexHTML))), sha: indexData.sha, branch: 'main' })
+  });
 }

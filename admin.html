@@ -383,6 +383,9 @@ const data=await getResp.json();
 let indexHTML=decodeURIComponent(escape(atob(data.content)));
 const date=new Date().toISOString().split('T')[0];
 const excerpt=content.substring(0,100).replace(/[#*`\n]/g,'');
+// 如果该文章卡片已存在，先移除旧的再插入新的（防止重复）
+const existingCardRegex=new RegExp("<article[^>]*onclick=\"location\\\\.href='"+fileName+"'\"[^>]*>[\\s\\S]*?</article>\\s*",'g');
+indexHTML=indexHTML.replace(existingCardRegex,'');
 const newCard=`
     <article onclick="location.href='${fileName}'">
       <div class="post-meta">
