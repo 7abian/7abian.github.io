@@ -78,7 +78,8 @@
       "Bash(git push:*)",
       "Bash(printf:*)",
       "Bash(~/.ssh/config)",
-      "Bash(git merge:*)"
+      "Bash(git merge:*)",
+      "Bash(grep:*)"
     ],
     "additionalDirectories": [
       "c:\\Users\\MRNOKK\\Desktop\\7abian.githubio\\tools",
