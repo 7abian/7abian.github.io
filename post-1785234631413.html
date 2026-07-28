@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="关于密码学中 AES-256-GCM 的算法理解 — MRNOKK's Blog 技术文章">
+<meta property="og:title" content="关于密码学中 AES-256-GCM 的算法理解 · MRNOKK's Blog">
+<meta property="og:description" content="关于密码学中 AES-256-GCM 的算法理解 — 阅读技术文章，分享成长。">
+<meta property="og:type" content="article">
+<link rel="icon" href="images/favicon.svg" type="image/svg+xml">
+<title>关于密码学中 AES-256-GCM 的算法理解 · MRNOKK's Blog</title>
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+<div class="progress-bar" id="progress" aria-hidden="true"></div>
+<div class="bg-wrap" aria-hidden="true">
+<div class="bg-orb orb-1"></div>
+<div class="bg-orb orb-2"></div>
+<div class="bg-orb orb-3"></div>
+</div>
+<header>
+<div class="nav-container">
+<div class="header-left">
+<a href="index.html" class="back-btn">← 返回首页</a>
+<div class="admin-only">
+<a href="admin.html?edit=post-1785234631413.html" class="back-btn">✏️ 编辑</a>
+<a href="#" onclick="deletePost('post-1785234631413.html');return false" class="back-btn">🗑️ 删除</a>
+</div>
+</div>
+<a href="index.html" class="logo">
+<img src="images/avatar02.jpg" alt="MRNOKK" class="avatar">
+<span>MRNOKK's Blog</span>
+</a>
+</div>
+</header>
+<div class="post-wrap">
+<div class="post-hero">
+<div class="post-tag">技术</div>
+<h1>关于密码学中 AES-256-GCM 的算法理解</h1>
+<div class="post-info">
+<span>2026-07-28</span>
+<span>阅读约 5 分钟</span>
+	<span id="article-views">阅读 -- 次</span>
+</div>
+</div>
+<div class="post-content">
+<h2>AES-256-GCM：Signal Protocol 中的认证加密基石</h2>
+<p>在 Signal Protocol 的完整加密体系中，AES-256-GCM 承担着最核心的职责——直接加密和解密每一条消息的内容。作为整个协议栈的“最后一公里”加密层，它的安全性直接决定了通信内容的机密性与完整性。</p>
+<h3>一、GCM 模式：为何选择它</h3>
+<p>AES-GCM（Galois/Counter Mode）是一种 AEAD（Authenticated Encryption with Associated Data，带关联数据的认证加密）算法。它在 CTR（Counter）模式加密的基础上增加了 GMAC（Galois Message Authentication Code）认证机制。这一设计带来了三个关键优势：</p>
+<p><strong>认证加密（AEAD）</strong> ：GCM 在加密数据的同时生成一个认证标签（Authentication Tag），任何对密文的篡改都会导致标签验证失败。这意味着解密操作天然具备完整性校验能力，无需像 AES-CBC 那样额外搭配独立的 MAC 函数。</p>
+<p><strong>高性能与并行化</strong>：CTR 模式的加密过程可以高度并行化。在支持 AES-NI 指令集的现代 CPU 上，GCM 的吞吐量显著高于需要串行加密的 CBC 模式。</p>
+<p><strong>无需填充</strong>：作为流加密模式，GCM 不需要对明文进行填充（Padding），可直接处理任意长度的数据。</p>
+<p>AES-256-GCM 的具体参数为：<strong>256 位（32 字节）密钥、96 位（12 字节）Nonce、128 位（16 字节）认证标签</strong>。这些参数由 NIST SP 800-38D 和 RFC 5116 共同规范。</p>
+<h3>二、在 Signal Protocol 栈中的位置</h3>
+<p>整个加密系统的架构遵循 Signal Protocol 的分层设计，AES-256-GCM 位于协议栈的对称加密层：</p>
+<pre><code>ed25519.ts        → 身份密钥（Ed25519 签名/验签）
+    ↓
+x25519.ts         → DH 密钥交换（X25519）
+    ↓
+x3dh.ts           → 密钥协商握手（4 次 DH + HKDF → root_key）
+    ↓
+hkdf.ts           → HKDF-SHA256 密钥派生 + AES-256-GCM 加解密
+    ↓
+ratchet.ts        → Double Ratchet 状态机（DH 棘轮 + 对称棘轮）
+    ↓
+session.ts        → 会话编排（绑定以上所有模块）
+</code></pre>
+<p>AES-256-GCM 的加密/解密实现位于 <code>hkdf.ts</code> 文件中（即 <code>aesEncrypt</code> / <code>aesDecrypt</code> 函数），而密钥生成、Nonce 计算和二进制封包格式则由 <code>envelope.ts</code> 负责。这种分层使得每一层关注单一职责：X3DH 负责初始密钥协商，Double Ratchet 负责密钥持续更新，AES-256-GCM 专注于消息内容的实际加解密。</p>
+<h3>三、密钥派生与消息加密流程</h3>
+<p>在 <code>ratchet.ts</code> 中，每条消息的加密遵循严格的棘轮步进流程：</p>
+<p><strong>DH 棘轮（提供前向安全）</strong> ：定期使用 X25519 生成新的 DH 密钥对，通过 DH 输出更新 <code>root_key</code>。具体实现中，<code>ratchetStep</code> 函数以 <code>rootKey</code> 作为 salt、<code>dhOutput</code> 作为 IKM，通过 HKDF-SHA256 派生出新的 <code>rootKey</code>（info = <code>[0x01]</code>）和新的 <code>chainKey</code>（info = <code>[0x02]</code>）。</p>
+<p><strong>对称棘轮（从 chain key 派生消息密钥）</strong> ：每次发送消息时，从当前的 <code>chainKey</code> 派生出一次性使用的 <code>messageKey</code>。代码中采用 SHA-256 直接派生（<code>messageKeyStep</code> 函数），<code>messageKey = SHA-256(chainKey)</code>。派生完成后，旧的 <code>chainKey</code> 被丢弃——这是对称棘轮“只进不退”特性的核心体现。</p>
+<p><strong>AES-256-GCM 加密</strong>：用派生出的 32 字节 <code>messageKey</code> 配合 12 字节 Nonce 加密明文。Nonce 必须对每条消息唯一——在同一个密钥下重复使用 Nonce 会彻底破坏 GCM 的机密性和完整性保证，攻击者可恢复明文或伪造密文。</p>
+<p><strong>Key Erasure</strong>：加密完成后立即用 <code>fill(0)</code> 覆盖内存中的 <code>messageKey</code>，确保密钥材料不在内存中残留。</p>
+<h3>四、Nonce 管理：不可妥协的安全红线</h3>
+<p>AES-GCM 最关键的约束是：<strong>对于同一个密钥，Nonce 绝不能重复使用</strong>。这是因为 GCM 内部使用 CTR 模式，如果 (key, IV) 对重复，加密同一密钥下不同明文将导致严重的机密性灾难。</p>
+<p>在 Signal Protocol 的 Double Ratchet 框架中，这一问题通过两个机制解决：</p>
+<ol>
+<li><p><strong>每条消息使用独立的消息密钥</strong>：对称棘轮为每条消息派生全新的 <code>messageKey</code>，每个 <code>messageKey</code> 只加密一条消息。</p>
+</li>
+<li><p><strong>Nonce 随消息密钥唯一确定</strong>：<code>envelope.ts</code> 中负责 Nonce 的计算和编解码，确保每个 (messageKey, nonce) 组合的全局唯一性。</p>
+</li>
+</ol>
+<p>根据 NIST SP 800-38D 的指导，使用随机生成 IV 的实现应将单密钥加密次数限制在 2³² 次以内以降低 Nonce 碰撞概率。Signal 的棘轮机制天然符合这一要求——密钥在每次 DH 棘轮后更新，实际单密钥加密次数远低于此上限。</p>
+<h3>五、安全属性：前向安全与后妥协安全</h3>
+<p>AES-256-GCM 与 Double Ratchet 的结合提供了两个关键安全属性：</p>
+<p><strong>前向安全（Forward Secrecy）</strong> ：即使某一时刻的消息密钥被泄露，由于对称棘轮的单向派生特性（<code>chainKey → messageKey</code> 不可逆），攻击者无法回溯推导出之前的消息密钥。DH 棘轮每次更新 <code>root_key</code> 时丢弃旧密钥，进一步强化了这一特性。</p>
+<p><strong>后妥协安全（Post-Compromise Security / Break-in Recovery）</strong> ：每次 DH 棘轮执行时，双方交换新的 DH 公钥并派生新的 <code>root_key</code> 和 <code>chainKey</code>。即使攻击者曾经获取了某个时间点的密钥材料，一次完整的 DH 棘轮交换后，安全属性会被重置——新派生的密钥与旧密钥在数学上无关。</p>
+<h3>六、工程实现要点</h3>
+<p>在基于 Web Crypto API 的实现中，AES-256-GCM 的密钥通常以 <code>CryptoKey</code> 对象管理，默认设置 <code>extractable = false</code> 以防止密钥材料被脚本读取。加密操作通过 <code>crypto.subtle.encrypt</code> 和 <code>crypto.subtle.decrypt</code> 完成，认证标签由 Web Crypto API 自动附加和验证。</p>
+<h3>总结</h3>
+<p>AES-256-GCM 在 Signal Protocol 中扮演着“最后一道防线”的角色。它凭借 AEAD 的认证加密特性，在保证消息机密性的同时提供了内置的完整性保护；配合 Double Ratchet 的密钥更新机制，实现了前向安全与后妥协安全；严格的 Nonce 唯一性要求则通过每条消息独立密钥的设计得到满足。正是这一层层递进的安全设计，使得 Signal Protocol 能够为数十亿条消息提供端到端的加密保护。</p>
+
+</div>
+<nav class="post-nav" aria-label="文章导航">
+<div class="placeholder"></div>
+<a href="post-1784610862469.html" class="next-link">
+  <span class="nav-label">下一篇 →</span>
+  <span class="nav-title">关于内网 Metasploit（MSF）渗透常用的靶机提权方法</span>
+  </a>
+</nav>
+<div id="comment-section" data-blog-comments data-page-path="post-1785234631413"></div>
+</div>
+<footer>
+<p>&copy; 2026 MRNOKK's Blog. 用心记录，分享成长。</p>
+</footer>
+<script src="comments.js"></script>
+<script src="utils.js"></script>
+</body>
+</html>
