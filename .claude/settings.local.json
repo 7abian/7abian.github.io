@@ -67,7 +67,18 @@
       "Bash(curl -s -o /dev/null -w \"%{http_code}\" \"https://7abian.github.io/analytics.js\")",
       "Bash(curl -s \"https://7abian.github.io/post-1780184204273.html\")",
       "Bash(curl -s \"https://7abian.github.io/post-1779670042468.html\")",
-      "Bash(curl -s \"https://voumtuvtbrkbdmkqfmzy.supabase.co/rest/v1/comments?select=id,nickname,content,created_at,parent_id&page_path=eq.test&status=eq.approved&order=created_at.desc\" -H \"apikey: sb_publishable_KO5mI0KB4Ou5uvuTDAjk0A_eU63pJYu\" -H \"Authorization: Bearer sb_publishable_KO5mI0KB4Ou5uvuTDAjk0A_eU63pJYu\")"
+      "Bash(curl -s \"https://voumtuvtbrkbdmkqfmzy.supabase.co/rest/v1/comments?select=id,nickname,content,created_at,parent_id&page_path=eq.test&status=eq.approved&order=created_at.desc\" -H \"apikey: sb_publishable_KO5mI0KB4Ou5uvuTDAjk0A_eU63pJYu\" -H \"Authorization: Bearer sb_publishable_KO5mI0KB4Ou5uvuTDAjk0A_eU63pJYu\")",
+      "Bash(ls:*)",
+      "Bash(curl:*)",
+      "Bash(git push)",
+      "Bash(gh auth status:*)",
+      "Bash(ssh:*)",
+      "Bash(echo:*)",
+      "Bash(git remote:*)",
+      "Bash(git push:*)",
+      "Bash(printf:*)",
+      "Bash(~/.ssh/config)",
+      "Bash(git merge:*)"
     ],
     "additionalDirectories": [
       "c:\\Users\\MRNOKK\\Desktop\\7abian.githubio\\tools",
