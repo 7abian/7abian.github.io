@@ -5,7 +5,7 @@ const COMMENT_STATUS_ON_SUBMIT='approved';
 const PREFIX='__MRNOKK_COMMENT_JSON__';
 const EMOJIS=['😀','😂','🤣','😍','😎','🤔','😭','😡','👍','👏','🎉','❤️'];
 const GIFS=[
-{id:'laughing-cat',label:'笑出声',url:'https://media.giphy.com/media/3I8H8VvG9D7FRqd92Q/giphy.gif'},
+{id:'laughing-cat',label:'笑出声',url:'https://media.giphy.com/media/9KLPmWoiiPZvmJKQ14/giphy.gif'},
 {id:'dancing-banana',label:'开心摇摆',url:'https://media.giphy.com/media/IB9foBA4PVkKA/giphy.gif'},
 {id:'mind-blown',label:'震惊',url:'https://media.giphy.com/media/Um3ljJl8jrnHy/giphy.gif'},
 {id:'applause',label:'鼓掌',url:'https://media.giphy.com/media/l3q2XhfQ8oCkm1Ts4/giphy.gif'},
