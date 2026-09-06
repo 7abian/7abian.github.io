@@ -16,7 +16,10 @@ const GIFS=[
 {id:'confused',label:'一脸懵',url:'https://media.giphy.com/media/26tPcU5DDLaXPrPGg/giphy.gif'},
 {id:'too-real',label:'太真实了',url:'https://media.giphy.com/media/QMHoU66sBXqqLqYvGO/giphy.gif'},
 {id:'minion-laugh',label:'不愧是你',url:'https://media.giphy.com/media/ltIFdjNAasOwVvKhvx/giphy.gif'},
-{id:'omg',label:'卧槽',url:'https://media.giphy.com/media/8pbvazy5Ih1kt9i3MM/giphy.gif'}
+{id:'omg',label:'卧槽',url:'https://media.giphy.com/media/8pbvazy5Ih1kt9i3MM/giphy.gif'},
+{id:'surprised',label:'惊讶',url:'https://media.giphy.com/media/5VKbvrjxpVJCM/giphy.gif'},
+{id:'no-way',label:'不行',url:'https://media.giphy.com/media/1zSz5MVw4zKg0/giphy.gif'},
+{id:'why',label:'为什么',url:'https://media.giphy.com/media/pPhyAv5t9V8djyRFJH/giphy.gif'}
 ];
 const state={pagePath:(location.pathname.split('/').pop()||'index.html').replace(/\.html$/i,'')||'index'};
 const ok=()=>SUPABASE_URL.startsWith('https://')&&!SUPABASE_URL.includes('YOUR_PROJECT_ID')&&!SUPABASE_ANON_KEY.includes('YOUR_SUPABASE_ANON_PUBLIC_KEY');
